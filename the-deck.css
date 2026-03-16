@@ -1,0 +1,532 @@
+:root {
+    --custom-primary: #4CAF50;
+    --custom-secondary: #f5f5f5;
+    --custom-sidebar: #3a3b45;
+    --custom-dark: #121212;
+    --custom-light: #ffffff;
+    --custom-border: #dddddd;
+    --custom-text: #000000;
+    --custom-card-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+}
+
+body.dark-mode {
+    --custom-primary: #2E7D32;
+    --custom-secondary: #1e1e1e;
+    --custom-sidebar: #25262e;
+    --custom-dark: #121212;
+    --custom-light: #1e1e1e;
+    --custom-border: #444444;
+    --custom-text: #ffffff;
+    --custom-card-shadow: 0 0.15rem 1.75rem 0 rgba(0, 0, 0, 0.3);
+}
+
+body {
+    background-color: var(--custom-light);
+    color: var(--custom-text);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+body.bg-light {
+    background-color: var(--custom-light) !important;
+}
+
+body.dark-mode.bg-light {
+    background-color: var(--custom-light) !important;
+    color: var(--custom-text) !important;
+}
+
+.bg-custom-primary {
+    background-color: var(--custom-primary) !important;
+}
+
+.bg-custom-sidebar {
+    background-color: var(--custom-sidebar) !important;
+}
+
+.border-custom {
+    border-color: var(--custom-border) !important;
+}
+
+.text-custom {
+    color: var(--custom-text) !important;
+}
+
+.alert-custom-secondary {
+    background-color: var(--custom-secondary);
+    border-color: var(--custom-border);
+    color: var(--custom-text);
+    position: relative;
+}
+
+.btn-custom-primary {
+    background-color: var(--custom-primary);
+    border-color: var(--custom-primary);
+    color: white;
+}
+
+.btn-custom-primary:hover {
+    background-color: #2e59d9;
+    border-color: #2653d4;
+}
+
+.card {
+    border-radius: 0.35rem;
+    box-shadow: var(--custom-card-shadow);
+    border: none;
+}
+
+#sidebar {
+    min-height: calc(100vh - 56px);
+    width: 250px;
+    transition: all 0.3s;
+}
+
+#sidebar.collapsed {
+    width: 70px;
+}
+
+#sidebar.collapsed .menu-text {
+    display: none;
+}
+
+#sidebar.collapsed #sidebar-title {
+    display: none;
+}
+
+#sidebar .nav-link {
+    color: rgba(255, 255, 255, 0.8);
+    border-radius: 0.25rem;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem 1rem;
+}
+
+#sidebar .nav-link:hover {
+    color: white;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+#sidebar .nav-link.active {
+    background-color: var(--custom-primary);
+    color: white;
+}
+
+#toggle-sidebar {
+    display: none;
+}
+
+#sidebar.collapsed #toggle-sidebar {
+    display: block;
+}
+
+.copy-notification {
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.dark-mode .bg-light {
+    background-color: var(--custom-dark) !important;
+}
+
+.dark-mode .bg-custom-sidebar {
+    background-color: var(--custom-sidebar) !important;
+}
+
+.dark-mode .card {
+    background-color: var(--custom-dark) !important;
+    border-color: var(--custom-border) !important;
+    color: var(--custom-text) !important;
+}
+
+.dark-mode .card-header {
+    background-color: var(--custom-primary) !important;
+    color: white !important;
+}
+
+.dark-mode .card-body {
+    color: var(--custom-text) !important;
+}
+
+.dark-mode .card-text {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.dark-mode .card-title {
+    color: var(--custom-text) !important;
+}
+
+.dark-mode .alert-custom-secondary {
+    background-color: var(--custom-sidebar) !important;
+    border-color: var(--custom-border) !important;
+    color: var(--custom-text) !important;
+}
+
+.dark-mode .form-control {
+    background-color: var(--custom-sidebar) !important;
+    border-color: var(--custom-border) !important;
+    color: var(--custom-text) !important;
+}
+
+.dark-mode .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.dark-mode .form-select {
+    background-color: var(--custom-sidebar) !important;
+    border-color: var(--custom-border) !important;
+    color: var(--custom-text) !important;
+}
+
+.dark-mode .form-check-input {
+    background-color: var(--custom-sidebar);
+    border-color: var(--custom-border);
+}
+
+.dark-mode .form-check-label {
+    color: var(--custom-text) !important;
+}
+
+.dark-mode .table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.dark-mode .table {
+    color: var(--custom-text) !important;
+}
+
+.dark-mode .table thead {
+    color: var(--custom-text) !important;
+}
+
+.dark-mode .form-label {
+    color: var(--custom-text) !important;
+}
+
+.dark-mode .hash-format-section {
+    background-color: var(--custom-sidebar) !important;
+    border-color: var(--custom-border) !important;
+}
+
+.dark-mode .token-format-section {
+    background-color: var(--custom-sidebar) !important;
+    border-color: var(--custom-border) !important;
+}
+
+.dark-mode .key-format-section {
+    background-color: var(--custom-sidebar) !important;
+    border-color: var(--custom-border) !important;
+}
+
+.dark-mode pre {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+}
+
+/* Largeur fixe pour l'alerte du token */
+#token-result {
+    word-break: break-all;
+    white-space: pre-wrap;
+    max-width: 100%;
+    overflow-wrap: break-word;
+}
+
+/* Tooltip pour copie */
+.copy-tooltip {
+    position: absolute;
+    top: -1.75rem;
+    right: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    background: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.15s, transform 0.15s;
+}
+
+.copy-tooltip.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.copy-tooltip-token {
+    position: absolute;
+    top: -2.25rem;
+    right: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    background: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.15s, transform 0.15s;
+    white-space: nowrap;
+    z-index: 10;
+}
+
+.copy-tooltip-token.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Hash results truncation */
+.hash-results .flex-fill {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 100px;
+}
+
+/* Copy buttons consistent sizing */
+.copy-hash-btn, .copy-token-btn {
+    width: 2rem;
+    height: 2rem;
+    padding: 0.25rem !important;
+    font-size: 0.75rem !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Monospace font for all results */
+.hash-results .flex-fill,
+#token-result span,
+#base64-result,
+#color-result span,
+#datetime-result,
+#subnet-result,
+pre {
+    font-family: 'Roboto Mono', 'SF Mono', 'Consolas', monospace !important;
+    font-size: 0.875rem;
+}
+
+/* Hash generator styles */
+.hash-format-section {
+    border: 1px solid var(--custom-border);
+    border-radius: 0.375rem;
+    padding: 1rem;
+    background-color: var(--custom-secondary);
+    margin-bottom: 1rem;
+}
+
+.hash-format-section h6 {
+    color: var(--custom-text);
+    font-family: 'Roboto Mono', 'SF Mono', 'Consolas', monospace;
+    margin-bottom: 0.5rem;
+}
+
+.hash-format-section pre {
+    font-family: 'Roboto Mono', 'SF Mono', 'Consolas', monospace;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+/* Copy tooltip for hashes */
+.copy-tooltip-hash {
+    position: absolute;
+    background: var(--custom-primary);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    white-space: nowrap;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(-100%);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    margin-top: -0.5rem;
+    pointer-events: none;
+}
+
+.copy-tooltip-hash.show {
+    opacity: 1;
+    transform: translateY(-120%);
+}
+
+/* Token generator styles */
+.token-format-section {
+    border: 1px solid var(--custom-border);
+    border-radius: 0.375rem;
+    padding: 1rem;
+    background-color: var(--custom-secondary);
+    margin-bottom: 1rem;
+}
+
+.token-format-section h6 {
+    color: var(--custom-text);
+    font-family: 'Roboto Mono', 'SF Mono', 'Consolas', monospace;
+    margin-bottom: 0.5rem;
+}
+
+.token-format-section pre {
+    font-family: 'Roboto Mono', 'SF Mono', 'Consolas', monospace;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+/* Key generator styles */
+.key-format-section {
+    border: 1px solid var(--custom-border);
+    border-radius: 0.375rem;
+    padding: 1rem;
+    background-color: var(--custom-secondary);
+    margin-bottom: 1rem;
+}
+
+.key-format-section h6 {
+    color: var(--custom-text);
+    font-family: 'Roboto Mono', 'SF Mono', 'Consolas', monospace;
+    margin-bottom: 0.5rem;
+}
+
+.key-format-section pre {
+    font-family: 'Roboto Mono', 'SF Mono', 'Consolas', monospace;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+/* Copy tooltip for keys */
+.copy-tooltip-key {
+    position: absolute;
+    background: var(--custom-primary);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    white-space: nowrap;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(-100%);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    margin-top: -0.5rem;
+    pointer-events: none;
+}
+
+.copy-tooltip-key.show {
+    opacity: 1;
+    transform: translateY(-120%);
+}
+
+/* Home page styles */
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.home-card {
+    border-color: var(--custom-border) !important;
+    transition: all 0.3s ease;
+}
+
+.home-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--custom-card-shadow);
+    border-color: var(--custom-primary) !important;
+}
+
+#home-section {
+    padding: 2rem 0;
+}
+
+#home-section h2 {
+    color: var(--custom-text);
+    margin-bottom: 3rem;
+    font-weight: 600;
+}
+
+/* Menu collapsible styles */
+.menu-toggle {
+    font-size: 0.75rem;
+    transition: transform 0.3s ease;
+}
+
+.nav-link[data-bs-toggle="collapse"][aria-expanded="true"] .menu-toggle {
+    transform: rotate(180deg);
+}
+
+/* Dark mode for home cards */
+.dark-mode .home-card {
+    background-color: var(--custom-dark) !important;
+    border-color: var(--custom-border) !important;
+    color: var(--custom-text) !important;
+}
+
+.dark-mode .home-card .card-body {
+    color: var(--custom-text) !important;
+}
+
+.dark-mode .home-card .card-title {
+    color: var(--custom-text) !important;
+}
+
+.dark-mode .home-card .card-text {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Dark mode buttons and form elements */
+.dark-mode .btn-outline-primary {
+    color: var(--custom-primary) !important;
+    border-color: var(--custom-primary) !important;
+}
+
+.dark-mode .btn-outline-primary:hover {
+    background-color: var(--custom-primary) !important;
+    border-color: var(--custom-primary) !important;
+}
+
+.dark-mode .btn-outline-secondary {
+    color: rgba(255, 255, 255, 0.8) !important;
+    border-color: var(--custom-border) !important;
+}
+
+.dark-mode .btn-outline-secondary:hover {
+    background-color: var(--custom-sidebar) !important;
+    border-color: var(--custom-border) !important;
+}
+
+.dark-mode .btn-outline-success {
+    color: #4CAF50 !important;
+    border-color: #4CAF50 !important;
+}
+
+.dark-mode .btn-outline-success:hover {
+    background-color: #4CAF50 !important;
+    border-color: #4CAF50 !important;
+}
+
+.dark-mode .input-group-text {
+    background-color: var(--custom-sidebar) !important;
+    border-color: var(--custom-border) !important;
+    color: var(--custom-text) !important;
+}
+
+.dark-mode .small {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.dark-mode .text-muted {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.dark-mode h5,
+.dark-mode h6 {
+    color: var(--custom-text) !important;
+}
+
+.dark-mode label {
+    color: var(--custom-text) !important;
+}
+
