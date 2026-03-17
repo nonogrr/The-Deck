@@ -201,20 +201,13 @@ body.dark-mode.bg-light {
     color: var(--custom-text) !important;
 }
 
-.dark-mode .hash-format-section {
-    background-color: var(--custom-sidebar) !important;
-    border-color: var(--custom-border) !important;
-}
-
-.dark-mode .token-format-section {
-    background-color: var(--custom-sidebar) !important;
-    border-color: var(--custom-border) !important;
-}
-
+.dark-mode .result-block,
+.dark-mode .hash-format-section,
 .dark-mode .key-format-section {
     background-color: var(--custom-sidebar) !important;
     border-color: var(--custom-border) !important;
 }
+
 
 .dark-mode pre {
     background-color: #000000 !important;
@@ -303,8 +296,10 @@ pre {
     font-size: 0.875rem;
 }
 
-/* Hash generator styles */
-.hash-format-section {
+/* Bloc résultat universel */
+.result-block,
+.hash-format-section,
+.key-format-section {
     border: 1px solid var(--custom-border);
     border-radius: 0.375rem;
     padding: 1rem;
@@ -312,15 +307,10 @@ pre {
     margin-bottom: 1rem;
 }
 
-.hash-format-section h6 {
-    color: var(--custom-text);
+.result-block pre,
+.hash-format-section pre,
+.key-format-section pre {
     font-family: 'Roboto Mono', 'SF Mono', 'Consolas', monospace;
-    margin-bottom: 0.5rem;
-}
-
-.hash-format-section pre {
-    font-family: 'Roboto Mono', 'SF Mono', 'Consolas', monospace;
-    font-size: 0.875rem;
     line-height: 1.4;
     margin: 0;
     white-space: pre-wrap;
@@ -350,53 +340,6 @@ pre {
     transform: translateY(-120%);
 }
 
-/* Token generator styles */
-.token-format-section {
-    border: 1px solid var(--custom-border);
-    border-radius: 0.375rem;
-    padding: 1rem;
-    background-color: var(--custom-secondary);
-    margin-bottom: 1rem;
-}
-
-.token-format-section h6 {
-    color: var(--custom-text);
-    font-family: 'Roboto Mono', 'SF Mono', 'Consolas', monospace;
-    margin-bottom: 0.5rem;
-}
-
-.token-format-section pre {
-    font-family: 'Roboto Mono', 'SF Mono', 'Consolas', monospace;
-    font-size: 0.875rem;
-    line-height: 1.4;
-    margin: 0;
-    white-space: pre-wrap;
-    word-break: break-all;
-}
-
-/* Key generator styles */
-.key-format-section {
-    border: 1px solid var(--custom-border);
-    border-radius: 0.375rem;
-    padding: 1rem;
-    background-color: var(--custom-secondary);
-    margin-bottom: 1rem;
-}
-
-.key-format-section h6 {
-    color: var(--custom-text);
-    font-family: 'Roboto Mono', 'SF Mono', 'Consolas', monospace;
-    margin-bottom: 0.5rem;
-}
-
-.key-format-section pre {
-    font-family: 'Roboto Mono', 'SF Mono', 'Consolas', monospace;
-    font-size: 0.875rem;
-    line-height: 1.4;
-    margin: 0;
-    white-space: pre-wrap;
-    word-break: break-all;
-}
 
 /* Copy tooltip for keys */
 .copy-tooltip-key {

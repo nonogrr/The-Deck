@@ -72,20 +72,44 @@
                                     </li>
                                     <li class="nav-item w-100">
                                         <a href="#" class="nav-link text-white" data-section="bcrypt-generator">
-                                            <i class="fas fa-shield-alt me-2"></i>
+                                            <i class="fas fa-shield-halved me-2"></i>
                                             <span class="menu-text">Bcrypt</span>
                                         </a>
                                     </li>
                                     <li class="nav-item w-100">
                                         <a href="#" class="nav-link text-white" data-section="key-generator">
-                                            <i class="fas fa-lock me-2"></i>
+                                            <i class="fas fa-file-signature me-2"></i>
                                             <span class="menu-text">Key Generator</span>
                                         </a>
                                     </li>
                                     <li class="nav-item w-100">
+                                        <a href="#" class="nav-link text-white" data-section="uuid-generator">
+                                            <i class="fas fa-dice me-2"></i>
+                                            <span class="menu-text">UUID Generator</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item w-100">
                                         <a href="#" class="nav-link text-white" data-section="base64">
-                                            <i class="fas fa-exchange-alt me-2"></i>
+                                            <i class="fas fa-right-left me-2"></i>
                                             <span class="menu-text">Base64</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item w-100">
+                                        <a href="#" class="nav-link text-white" data-section="hex-encoder">
+                                            <i class="fas fa-hashtag me-2"></i>
+                                            <span class="menu-text">Hex (Base16)</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item w-100">
+                                        <a href="#" class="nav-link text-white" data-section="jwt-decoder">
+                                            <i class="fas fa-id-card me-2"></i>
+                                            <span class="menu-text">JWT Decoder</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item w-100">
+                                        <a href="#" class="nav-link text-white" data-section="cert-generator">
+                                            <i class="fas fa-certificate me-2"></i>
+                                            <span class="menu-text">Certificate Generator</span>
                                         </a>
                                     </li>
                                 </ul>
@@ -169,6 +193,42 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-6 col-lg-3">
+                                <div class="card h-100 border-custom cursor-pointer home-card" data-section="jwt-decoder">
+                                    <div class="card-body text-center">
+                                        <i class="fas fa-id-card fa-3x mb-3" style="color: var(--custom-primary);"></i>
+                                        <h5 class="card-title">JWT Decoder</h5>
+                                        <p class="card-text text-muted">Décodez et inspectez vos tokens JWT</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-3">
+                                <div class="card h-100 border-custom cursor-pointer home-card" data-section="cert-generator">
+                                    <div class="card-body text-center">
+                                        <i class="fas fa-certificate fa-3x mb-3" style="color: var(--custom-primary);"></i>
+                                        <h5 class="card-title">Certificate Generator</h5>
+                                        <p class="card-text text-muted">Générez certificats autosignés et CSR</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-3">
+                                <div class="card h-100 border-custom cursor-pointer home-card" data-section="uuid-generator">
+                                    <div class="card-body text-center">
+                                        <i class="fas fa-dice fa-3x mb-3" style="color: var(--custom-primary);"></i>
+                                        <h5 class="card-title">UUID Generator</h5>
+                                        <p class="card-text text-muted">Générez des UUIDs v1, v3, v4, v5, v7</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-3">
+                                <div class="card h-100 border-custom cursor-pointer home-card" data-section="hex-encoder">
+                                    <div class="card-body text-center">
+                                        <i class="fas fa-hashtag fa-3x mb-3" style="color: var(--custom-primary);"></i>
+                                        <h5 class="card-title">Hex (Base16)</h5>
+                                        <p class="card-text text-muted">Encodez et décodez en hexadécimal</p>
+                                    </div>
+                                </div>
+                            </div>
                             <!-- Autres outils -->
                             <!-- Note: Base64 moved to Crypto menu -->
                             <div class="col-md-6 col-lg-3">
@@ -248,25 +308,26 @@
                                 <label class="form-check-label" for="symbols">Symboles (!@#$...)</label>
                             </div>
                         </div>
-                        <div class="mb-3">
-                            <div class="token-format-section">
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <h6 class="mb-0">Résultat</h6>
-                                    <div class="btn-group btn-group-sm">
-                                        <button type="button" class="btn btn-outline-primary copy-token-btn" id="copy-token" title="Copier">
-                                            <i class="fas fa-copy"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-outline-success download-token-btn" id="download-token" title="Télécharger">
-                                            <i class="fas fa-download"></i>
-                                        </button>
-                                    </div>
+                        <div class="d-flex gap-2 mb-4">
+                            <button class="btn btn-custom-primary" id="refresh-token">
+                                <i class="fas fa-sync me-2"></i> Actualiser
+                            </button>
+                        </div>
+                        <div class="result-block">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <h6 class="mb-0 text-warning"><i class="fas fa-key me-1"></i> Résultat</h6>
+                                <div class="btn-group btn-group-sm">
+                                    <button type="button" class="btn btn-outline-warning" id="copy-token" title="Copier">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-warning" id="download-token" title="Télécharger">
+                                        <i class="fas fa-download"></i>
+                                    </button>
                                 </div>
-                                <pre class="bg-dark text-white p-3 rounded text-break" id="token-result">Modifiez les paramètres pour générer un token.</pre>
                             </div>
-                            <div class="d-flex gap-2 mt-3">
-                                <button class="btn btn-custom-primary" id="refresh-token">
-                                    <i class="fas fa-sync me-2"></i> Actualiser
-                                </button>
+                            <pre class="bg-dark text-warning p-3 rounded text-break mt-2" id="token-result" style="font-size:0.85rem;">Modifiez les paramètres pour générer un token.</pre>
+                            <div id="token-entropy" class="mt-2" style="display:none;">
+                                <small class="text-muted">Entropie : <strong id="entropy-bits"></strong> bits &mdash; <span id="entropy-badge" class="badge"></span></small>
                             </div>
                         </div>
                     </div>
@@ -301,6 +362,11 @@
                                 Afficher la clé
                             </label>
                         </div>
+                        <div class="d-flex gap-2 mb-4">
+                            <button class="btn btn-outline-secondary" id="hash-clear">
+                                <i class="fas fa-times me-2"></i> Effacer
+                            </button>
+                        </div>
                         <div id="hash-result"></div>
                     </div>
                 </div>
@@ -334,7 +400,14 @@
                             </div>
                             <small class="text-muted d-block mt-1">Plus élevé = plus sécurisé mais plus lent. 10-12 recommandé.</small>
                         </div>
-                        <button class="btn btn-custom-primary mb-3" id="bcrypt-generate">Générer</button>
+                        <div class="d-flex gap-2 mb-4">
+                            <button class="btn btn-custom-primary" id="bcrypt-generate">
+                                <i class="fas fa-shield-alt me-2"></i> Générer
+                            </button>
+                            <button class="btn btn-outline-secondary" id="bcrypt-clear">
+                                <i class="fas fa-times me-2"></i> Effacer
+                            </button>
+                        </div>
                         <div id="bcrypt-result"></div>
                     </div>
                 </div>
@@ -345,31 +418,140 @@
                         <h5 class="mb-0"><i class="fas fa-lock me-2"></i> Key Generator</h5>
                     </div>
                     <div class="card-body">
-                        <div class="mb-3">
-                            <label for="key-type" class="form-label">Type de clé :</label>
-                            <select class="form-select" id="key-type">
-                                <option value="ed25519">ED25519</option>
-                                <option value="rsa">RSA</option>
-                                <option value="ecdsa">ECDSA</option>
-                            </select>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="key-type" class="form-label fw-bold">Type de clé <span class="text-danger">*</span></label>
+                                <select class="form-select" id="key-type">
+                                    <option value="ed25519">ED25519</option>
+                                    <option value="rsa">RSA</option>
+                                    <option value="ecdsa">ECDSA</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Taille de clé <span class="text-danger">*</span></label>
+                                <div id="key-size-container">
+                                    <select class="form-select" id="key-size">
+                                        <option value="2048">RSA 2048 bits (standard marché)</option>
+                                        <option value="4096">RSA 4096 bits</option>
+                                    </select>
+                                </div>
+                                <div id="ecdsa-curve-container" style="display:none;">
+                                    <select class="form-select" id="ecdsa-curve">
+                                        <option value="p256">P-256 / 256 bits (standard marché)</option>
+                                        <option value="p384">P-384 / 384 bits</option>
+                                        <option value="p521">P-521 / 521 bits</option>
+                                    </select>
+                                </div>
+                                <div id="key-size-na" class="form-control bg-body-secondary text-muted" style="display:none;">—</div>
+                            </div>
                         </div>
-                        <div class="mb-3" id="key-size-container" style="display: none;">
-                            <label for="key-size" class="form-label">Taille de clé :</label>
-                            <select class="form-select" id="key-size">
-                                <option value="2048">2048 bits</option>
-                                <option value="4096">4096 bits</option>
-                            </select>
+                        <div class="d-flex gap-2 mb-4">
+                            <button class="btn btn-custom-primary" id="generate-key">
+                                <i class="fas fa-key me-2"></i> Générer
+                            </button>
+                            <button class="btn btn-outline-secondary" id="key-clear">
+                                <i class="fas fa-times me-2"></i> Effacer
+                            </button>
                         </div>
-                        <div class="mb-3" id="ecdsa-curve-container" style="display: none;">
-                            <label for="ecdsa-curve" class="form-label">Courbe ECDSA :</label>
-                            <select class="form-select" id="ecdsa-curve">
-                                <option value="p256">P-256</option>
-                                <option value="p384">P-384</option>
-                                <option value="p521">P-521</option>
-                            </select>
-                        </div>
-                        <button class="btn btn-custom-primary mb-3" id="generate-key">Générer</button>
                         <div id="key-result"></div>
+                    </div>
+                </div>
+
+                <!-- UUID Generator -->
+                <div class="card mb-3 border-0 shadow-sm d-none" id="uuid-generator">
+                    <div class="card-header bg-custom-primary text-white">
+                        <h5 class="mb-0"><i class="fas fa-dice me-2"></i> UUID Generator</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="uuid-version" class="form-label fw-bold">Version UUID <span class="text-danger">*</span></label>
+                                <select class="form-select" id="uuid-version">
+                                    <option value="4">v4 — Aléatoire (RFC 4122)</option>
+                                    <option value="7">v7 — Temporel ordonné (RFC 9562)</option>
+                                    <option value="1">v1 — Temporel horodaté (RFC 4122)</option>
+                                    <option value="5">v5 — Basé sur un nom / SHA-1 (RFC 4122)</option>
+                                    <option value="3">v3 — Basé sur un nom / MD5 (RFC 4122)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="uuid-count" class="form-label fw-bold">Quantité <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" id="uuid-count" min="1" max="100" value="1">
+                                <small class="text-muted">Entre 1 et 100</small>
+                            </div>
+                        </div>
+                        <!-- Namespace + nom (v3 / v5 uniquement) -->
+                        <div class="row g-3 mb-3" id="uuid-namespace-section" style="display:none;">
+                            <div class="col-md-6">
+                                <label for="uuid-namespace" class="form-label fw-bold">Namespace <span class="text-danger">*</span></label>
+                                <select class="form-select" id="uuid-namespace">
+                                    <option value="dns">DNS — 6ba7b810-9dad-11d1-80b4-00c04fd430c8</option>
+                                    <option value="url">URL — 6ba7b811-9dad-11d1-80b4-00c04fd430c8</option>
+                                    <option value="oid">OID — 6ba7b812-9dad-11d1-80b4-00c04fd430c8</option>
+                                    <option value="x500">X500 — 6ba7b814-9dad-11d1-80b4-00c04fd430c8</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="uuid-name" class="form-label fw-bold">Nom <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="uuid-name" placeholder="exemple.com">
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2 mb-4">
+                            <button class="btn btn-custom-primary" id="uuid-generate">
+                                <i class="fas fa-dice me-2"></i> Générer
+                            </button>
+                            <button class="btn btn-outline-secondary" id="uuid-clear">
+                                <i class="fas fa-times me-2"></i> Effacer
+                            </button>
+                        </div>
+                        <!-- Résultat -->
+                        <div class="result-block" id="uuid-result-block" style="display:none;">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <h6 class="mb-0 text-info"><i class="fas fa-list me-1"></i> Résultat</h6>
+                                <div class="btn-group btn-group-sm">
+                                    <button class="btn btn-outline-info" id="uuid-copy-all" title="Copier tout"><i class="fas fa-copy"></i></button>
+                                    <button class="btn btn-outline-info" id="uuid-download-all" title="Télécharger"><i class="fas fa-download"></i></button>
+                                </div>
+                            </div>
+                            <div id="uuid-list" class="bg-dark rounded p-3 mt-2" style="font-family:'Roboto Mono','SF Mono','Consolas',monospace;font-size:0.875rem;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hex (Base16) -->
+                <div class="card mb-3 border-0 shadow-sm d-none" id="hex-encoder">
+                    <div class="card-header bg-custom-primary text-white">
+                        <h5 class="mb-0"><i class="fas fa-hashtag me-2"></i> Hex (Base16)</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <textarea class="form-control" id="hex-input" rows="4" placeholder="Texte à encoder, ou valeur hexadécimale à décoder..."></textarea>
+                        </div>
+                        <div class="d-flex gap-2 mb-4">
+                            <button class="btn btn-custom-primary" id="encode-hex">
+                                <i class="fas fa-arrow-right me-2"></i> Encoder
+                            </button>
+                            <button class="btn btn-custom-primary" id="decode-hex">
+                                <i class="fas fa-arrow-left me-2"></i> Décoder
+                            </button>
+                            <button class="btn btn-outline-secondary" id="clear-hex">
+                                <i class="fas fa-times me-2"></i> Effacer
+                            </button>
+                        </div>
+                        <div id="hex-result-container" class="result-block" style="display:none;">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <h6 class="mb-0 text-info"><i class="fas fa-hashtag me-1"></i> Résultat</h6>
+                                <div class="btn-group btn-group-sm">
+                                    <button type="button" class="btn btn-outline-info" id="copy-hex" title="Copier">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-info" id="download-hex" title="Télécharger">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <pre class="bg-dark text-info p-3 rounded text-break mt-2" id="hex-result" style="font-size:0.85rem;"></pre>
+                        </div>
                     </div>
                 </div>
 
@@ -382,23 +564,211 @@
                         <div class="mb-3">
                             <textarea class="form-control" id="base64-input" rows="4" placeholder="Texte à encoder/décoder..."></textarea>
                         </div>
-                        <div class="mb-3">
-                            <button class="btn btn-custom-primary me-2" id="encode-base64">Encoder</button>
-                            <button class="btn btn-custom-primary" id="decode-base64">Décoder</button>
+                        <div class="d-flex gap-2 mb-4">
+                            <button class="btn btn-custom-primary" id="encode-base64">
+                                <i class="fas fa-lock me-2"></i> Encoder
+                            </button>
+                            <button class="btn btn-custom-primary" id="decode-base64">
+                                <i class="fas fa-unlock me-2"></i> Décoder
+                            </button>
+                            <button class="btn btn-outline-secondary" id="clear-base64">
+                                <i class="fas fa-times me-2"></i> Effacer
+                            </button>
                         </div>
-                        <div class="hash-format-section" id="base64-result-container" style="display: none;">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <h6 class="mb-0">Résultat</h6>
+                        <div id="base64-result-container" class="result-block" style="display:none;">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <h6 class="mb-0 text-info"><i class="fas fa-exchange-alt me-1"></i> Résultat</h6>
                                 <div class="btn-group btn-group-sm">
-                                    <button type="button" class="btn btn-outline-primary copy-base64-btn" id="copy-base64" title="Copier">
+                                    <button type="button" class="btn btn-outline-info" id="copy-base64" title="Copier">
                                         <i class="fas fa-copy"></i>
                                     </button>
-                                    <button type="button" class="btn btn-outline-success download-base64-btn" id="download-base64" title="Télécharger">
+                                    <button type="button" class="btn btn-outline-info" id="download-base64" title="Télécharger">
                                         <i class="fas fa-download"></i>
                                     </button>
                                 </div>
                             </div>
-                            <pre class="bg-dark text-white p-3 rounded text-break" id="base64-result"></pre>
+                            <pre class="bg-dark text-info p-3 rounded text-break" id="base64-result" style="font-size:0.85rem;"></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- JWT Decoder -->
+                <div class="card mb-3 border-0 shadow-sm d-none" id="jwt-decoder">
+                    <div class="card-header bg-custom-primary text-white">
+                        <h5 class="mb-0"><i class="fas fa-id-card me-2"></i> JWT Decoder</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="jwt-input" class="form-label">Token JWT :</label>
+                            <textarea class="form-control font-monospace" id="jwt-input" rows="4" placeholder="Collez votre JWT ici... (eyJ...)"></textarea>
+                        </div>
+                        <div class="d-flex gap-2 mb-3">
+                            <button class="btn btn-custom-primary" id="jwt-decode-btn">
+                                <i class="fas fa-unlock me-2"></i> Décoder
+                            </button>
+                            <button class="btn btn-outline-secondary" id="jwt-clear-btn">
+                                <i class="fas fa-times me-2"></i> Effacer
+                            </button>
+                        </div>
+                        <div id="jwt-result">
+                            <!-- Header -->
+                            <div class="result-block">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <h6 class="mb-0 text-primary"><i class="fas fa-heading me-1"></i> Header</h6>
+                                    <button class="btn btn-sm btn-outline-primary" id="jwt-copy-header" title="Copier"><i class="fas fa-copy"></i></button>
+                                </div>
+                                <pre class="bg-dark text-info p-3 rounded mb-0 mt-2" id="jwt-header-out">Décodez un JWT pour voir le header.</pre>
+                            </div>
+                            <!-- Payload -->
+                            <div class="result-block">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <h6 class="mb-0 text-success"><i class="fas fa-database me-1"></i> Payload</h6>
+                                    <button class="btn btn-sm btn-outline-success" id="jwt-copy-payload" title="Copier"><i class="fas fa-copy"></i></button>
+                                </div>
+                                <pre class="bg-dark text-success p-3 rounded mb-0 mt-2" id="jwt-payload-out">Décodez un JWT pour voir le payload.</pre>
+                            </div>
+                            <!-- Claims notables -->
+                            <div class="result-block" id="jwt-claims-section" style="display:none;">
+                                <h6 class="mb-2 text-warning"><i class="fas fa-info-circle me-1"></i> Claims</h6>
+                                <div id="jwt-claims" class="d-flex flex-wrap gap-2"></div>
+                            </div>
+                            <!-- Signature -->
+                            <div class="result-block">
+                                <h6 class="mb-1 text-danger"><i class="fas fa-signature me-1"></i> Signature</h6>
+                                <code class="text-danger text-break" id="jwt-signature-out">–</code>
+                                <div class="mt-1"><small class="text-muted">La vérification de signature nécessite la clé secrète/publique côté serveur.</small></div>
+                            </div>
+                        </div>
+                        <div id="jwt-error" class="alert alert-danger d-none"></div>
+                    </div>
+                </div>
+
+                <!-- Certificate Generator -->
+                <div class="card mb-3 border-0 shadow-sm d-none" id="cert-generator">
+                    <div class="card-header bg-custom-primary text-white">
+                        <h5 class="mb-0"><i class="fas fa-certificate me-2"></i> Certificate Generator</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <!-- Algorithme -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Algorithme de signature <span class="text-danger">*</span></label>
+                                <select class="form-select" id="cert-algo">
+                                    <option value="rsa">SHA-256 avec RSA</option>
+                                    <option value="ecdsa">SHA-256 avec ECDSA</option>
+                                </select>
+                            </div>
+                            <!-- Taille de clé -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Taille de clé <span class="text-danger">*</span></label>
+                                <select class="form-select" id="cert-key-size">
+                                    <option value="2048">RSA 2048 bits (standard marché)</option>
+                                    <option value="4096">RSA 4096 bits</option>
+                                </select>
+                                <select class="form-select d-none" id="cert-ec-curve">
+                                    <option value="secp256r1">P-256 / 256 bits (standard marché)</option>
+                                    <option value="secp384r1">P-384 / 384 bits</option>
+                                    <option value="secp521r1">P-521 / 521 bits</option>
+                                </select>
+                            </div>
+                            <!-- CN -->
+                            <div class="col-md-6">
+                                <label for="cert-cn" class="form-label fw-bold">Common Name (CN) <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="cert-cn" placeholder="exemple.com">
+                            </div>
+                            <!-- Validité -->
+                            <div class="col-md-6" id="cert-validity-container">
+                                <label for="cert-validity" class="form-label fw-bold">Validité (autosigné uniquement)</label>
+                                <select class="form-select" id="cert-validity">
+                                    <option value="365">1 an</option>
+                                    <option value="730">2 ans</option>
+                                    <option value="3650">10 ans</option>
+                                </select>
+                            </div>
+                            <!-- O -->
+                            <div class="col-md-6">
+                                <label for="cert-o" class="form-label">Organization (O)</label>
+                                <input type="text" class="form-control" id="cert-o" placeholder="Mon Organisation">
+                            </div>
+                            <!-- OU -->
+                            <div class="col-md-6">
+                                <label for="cert-ou" class="form-label">Organizational Unit (OU)</label>
+                                <input type="text" class="form-control" id="cert-ou" placeholder="IT Department">
+                            </div>
+                            <!-- L -->
+                            <div class="col-md-6">
+                                <label for="cert-l" class="form-label">Locality (L)</label>
+                                <input type="text" class="form-control" id="cert-l" placeholder="Paris">
+                            </div>
+                            <!-- ST -->
+                            <div class="col-md-6">
+                                <label for="cert-st" class="form-label">State or Province (ST)</label>
+                                <input type="text" class="form-control" id="cert-st" placeholder="Île-de-France">
+                            </div>
+                            <!-- C -->
+                            <div class="col-md-6">
+                                <label for="cert-c" class="form-label">Country (C)</label>
+                                <input type="text" class="form-control" id="cert-c" placeholder="FR" maxlength="2" style="max-width:120px;">
+                                <small class="text-muted">2 lettres (ISO 3166)</small>
+                            </div>
+                            <!-- SAN -->
+                            <div class="col-12">
+                                <label class="form-label fw-bold">Subject Alternative Names (SAN) <span class="text-danger">*</span></label>
+                                <div id="cert-san-list"></div>
+                                <button type="button" class="btn btn-sm btn-outline-secondary mt-2" id="cert-add-san">
+                                    <i class="fas fa-plus me-1"></i> Ajouter un SAN
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="d-flex flex-wrap gap-2 mt-4">
+                            <button class="btn btn-custom-primary" id="cert-gen-selfsigned">
+                                <i class="fas fa-certificate me-2"></i> Générer un autosigné
+                            </button>
+                            <button class="btn btn-outline-primary" id="cert-gen-csr">
+                                <i class="fas fa-file-alt me-2"></i> Générer un CSR
+                            </button>
+                            <button class="btn btn-outline-secondary" id="cert-clear">
+                                <i class="fas fa-times me-2"></i> Effacer
+                            </button>
+                        </div>
+
+                        <!-- Loading -->
+                        <div id="cert-loading" class="d-none mt-3">
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+                                <span id="cert-loading-msg">Génération en cours…</span>
+                            </div>
+                        </div>
+
+                        <!-- Erreur -->
+                        <div id="cert-error" class="alert alert-danger mt-3 d-none"></div>
+
+                        <!-- Résultat -->
+                        <div id="cert-result" class="mt-4">
+                            <!-- Clé privée -->
+                            <div class="result-block">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <h6 class="mb-0"><i class="fas fa-key me-1 text-warning"></i> Clé Privée (PKCS#8)</h6>
+                                    <div class="btn-group btn-group-sm">
+                                        <button class="btn btn-outline-warning" id="cert-copy-privkey" title="Copier"><i class="fas fa-copy"></i></button>
+                                        <button class="btn btn-outline-warning" id="cert-dl-privkey" title="Télécharger"><i class="fas fa-download"></i></button>
+                                    </div>
+                                </div>
+                                <pre class="bg-dark text-warning p-3 rounded text-break mt-2" id="cert-privkey-out" style="max-height:200px;overflow-y:auto;font-size:0.75rem;">Générez un certificat ou un CSR pour voir la clé privée.</pre>
+                            </div>
+                            <!-- Certificat / CSR -->
+                            <div class="result-block">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <h6 class="mb-0" id="cert-output-label"><i class="fas fa-certificate me-1 text-success"></i> Certificat</h6>
+                                    <div class="btn-group btn-group-sm">
+                                        <button class="btn btn-outline-success" id="cert-copy-cert" title="Copier"><i class="fas fa-copy"></i></button>
+                                        <button class="btn btn-outline-success" id="cert-dl-cert" title="Télécharger"><i class="fas fa-download"></i></button>
+                                    </div>
+                                </div>
+                                <pre class="bg-dark text-success p-3 rounded text-break mt-2" id="cert-cert-out" style="max-height:200px;overflow-y:auto;font-size:0.75rem;">Générez un certificat ou un CSR pour voir le résultat.</pre>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -526,6 +896,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/elliptic/6.6.1/elliptic.min.js"></script>
     <!-- Base64 encoding for SSH -->
     <script src="https://cdn.jsdelivr.net/npm/js-base64@3.7.5/base64.min.js"></script>
+    <!-- jsrsasign for X.509 / CSR generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsrsasign/10.5.27/jsrsasign-all-min.js"></script>
     <script src="the-deck.js"></script>
 </body>
 </html>

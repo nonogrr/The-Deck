@@ -5,11 +5,15 @@ Une collection d'outils web pratiques et conviviaux pour les développeurs et le
 ## 🚀 Fonctionnalités
 
 ### Crypto
-- **Token Generator** - Générer des tokens aléatoires sécurisés
+- **Token Generator** - Générer des tokens aléatoires sécurisés avec calcul de l'entropie
 - **Hash / HMAC** - Hasher du texte avec différents algorithmes
 - **Bcrypt** - Générer et vérifier des mots de passe bcrypt
 - **Key Generator** - Créer des clés cryptographiques
+- **Certificat Generator** - Génération d'un certificat auto-signé ou d'un CSR
+- **UUIDs Generator** - Générez des UUIDs v1, v3, v4, v5, v7
 - **Base64** - Encoder et décoder en Base64
+- **Hex (Base 16)** - Encoder et décoder en Hex (Base 16) : à venir
+- **JWT Decoder** - Décodage d'un JWT (JSON Web Token)
 
 ### Design
 - **Color Picker** - Sélectionner et convertir des couleurs
@@ -17,13 +21,42 @@ Une collection d'outils web pratiques et conviviaux pour les développeurs et le
 
 🛡️ Cryptographie & Secret (Le cœur du Deck)
 
-    Générateur de mot de passe / Secret : Avec options (longueur, caractères spéciaux, entropie estimée).
+Encodage / Décodage
 
-    Encodeur / Décodeur multi-formats : Base64, Hex, URL Encode, mais aussi JWT Decoder (pour inspecter le payload d'un token sans le valider).
+URL Encode/Decode — très courant en debug d'APIs REST
+HTML Entities Encode/Decode — utile pour le dev frontend / XSS analysis
+Binary / Octal converter — compléter Base16/Base64 avec les autres bases
+Hashing / Passwords
 
-    Formatage de clés : Un outil pour convertir une clé privée du format .pem vers une seule ligne (pour les variables d'environnement CI/CD) et inversement.
+Argon2 — successeur moderne de Bcrypt (recommandé par OWASP)
+PBKDF2 — standard pour la dérivation de clés (Web Crypto API natif)
+Hash compare — vérifier si un texte correspond à un hash bcrypt/argon2 existant
+Asymétrique / PKI
 
-    Vérificateur de robustesse (Password Strength) : Utilise une bibliothèque comme zxcvbn pour donner un score réel.
+PEM Inspector — parser et afficher le contenu d'un PEM (certificat, clé) : subject, issuer, dates, SANs, fingerprint
+SSH Key Generator — générer une paire ED25519/RSA au format OpenSSH (ssh-keygen en JS)
+TOTP Generator — générer des codes OTP (Google Authenticator compatible, RFC 6238)
+Symétrique
+
+AES Encrypt/Decrypt — chiffrement symétrique AES-GCM ou AES-CBC avec clé et IV
+HMAC standalone — actuellement intégré dans Hash/HMAC, mais un outil dédié avec choix d'algo et format de sortie serait plus lisible
+Tokens / Auth
+
+JWT Builder — en complément du JWT Decoder existant, construire et signer un JWT (HS256/RS256)
+OAuth2 / PKCE helper — générer code_verifier + code_challenge (utile pour les devs qui intègrent des flows OAuth)
+Utilitaires
+
+Diff tool — comparer deux chaînes ou deux blocs PEM/JSON
+Regex tester — tester des regex avec highlight des groupes
+CRC32 / Adler32 — checksums courants en protocoles réseau/embarqué
+Priorité suggérée si tu veux avancer par valeur ajoutée :
+
+TOTP Generator — très demandé, 100% client-side avec WebCrypto
+AES Encrypt/Decrypt — manque flagrant dans un toolbox crypto
+URL Encode/Decode — usage quotidien
+PEM Inspector — complète naturellement le Certificate Generator existant
+JWT Builder — complète le JWT Decoder
+
 
 🌐 Réseau & Infrastructure (Le côté Ops)
 

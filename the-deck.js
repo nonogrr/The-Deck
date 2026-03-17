@@ -209,6 +209,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (!charset) {
             tokenResult.textContent = 'Veuillez sélectionner au moins un type de caractère.';
+            const entropyEl = document.getElementById('token-entropy');
+            if (entropyEl) entropyEl.style.display = 'none';
             return;
         }
 
@@ -218,29 +220,41 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         tokenResult.textContent = token;
+
+        // Calcul et affichage de l'entropie
+        const entropy = length * Math.log2(charset.length);
+        const entropyEl = document.getElementById('token-entropy');
+        const entropyBits = document.getElementById('entropy-bits');
+        const entropyBadge = document.getElementById('entropy-badge');
+        if (entropyEl && entropyBits && entropyBadge) {
+            entropyBits.textContent = entropy.toFixed(1);
+            let label, color;
+            if (entropy < 28) {
+                label = 'Très Faible'; color = 'bg-danger';
+            } else if (entropy < 60) {
+                label = 'Faible'; color = 'bg-warning text-dark';
+            } else if (entropy < 80) {
+                label = 'Sécurisé'; color = 'bg-info text-dark';
+            } else if (entropy < 128) {
+                label = 'Très Sécurisé'; color = 'bg-success';
+            } else {
+                label = 'Militaire / Futuriste'; color = 'bg-primary';
+            }
+            entropyBadge.textContent = label;
+            entropyBadge.className = 'badge ' + color;
+            entropyEl.style.display = '';
+        }
     }
 
     if (copyTokenButton && tokenResult) {
         copyTokenButton.addEventListener('click', function() {
             const tokenText = tokenResult.textContent;
-            if (!tokenText || tokenText === 'Veuillez sélectionner au moins un type de caractère.') {
-                return;
-            }
-            navigator.clipboard.writeText(tokenText)
-                .then(() => {
-                    const existing = this.parentNode.parentNode.querySelector('.copy-tooltip-token');
-                    if (existing) existing.remove();
-
-                    const tip = document.createElement('span');
-                    tip.className = 'copy-tooltip-token';
-                    tip.textContent = 'Copié !';
-                    this.parentNode.appendChild(tip);
-
-                    requestAnimationFrame(() => tip.classList.add('show'));
-                    setTimeout(() => tip.classList.remove('show'), 1400);
-                    setTimeout(() => tip.remove(), 1700);
-                })
-                .catch(err => console.error('Erreur lors de la copie : ', err));
+            if (!tokenText || tokenText === 'Veuillez sélectionner au moins un type de caractère.') return;
+            navigator.clipboard.writeText(tokenText).then(() => {
+                const orig = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-check"></i>';
+                setTimeout(() => { this.innerHTML = orig; }, 1500);
+            }).catch(err => console.error('Erreur copie :', err));
         });
     }
 
@@ -316,59 +330,42 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    function createHashFormatSection(title, content) {
+    function createHashFormatSection(title, content, color) {
+        color = color || 'info';
+        const filename = title.toLowerCase().replace(/[\s()\/]+/g, '_') + '.txt';
         const section = document.createElement('div');
-        section.className = 'hash-format-section mb-4';
+        section.className = 'hash-format-section mb-3';
         section.innerHTML = `
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <h6 class="mb-0">${title}</h6>
+            <div class="d-flex justify-content-between align-items-center mb-1">
+                <h6 class="mb-0 text-${color}"><i class="fas fa-fingerprint me-1"></i>${title}</h6>
                 <div class="btn-group btn-group-sm">
-                    <button type="button" class="btn btn-outline-primary copy-hash-btn" data-content="${content.replace(/"/g, '&quot;')}">
+                    <button type="button" class="btn btn-outline-${color} copy-hash-btn" title="Copier">
                         <i class="fas fa-copy"></i>
                     </button>
-                    <button type="button" class="btn btn-outline-success download-hash-btn" data-content="${content.replace(/"/g, '&quot;')}" data-filename="${title.toLowerCase().replace(/\s+/g, '_')}.txt">
+                    <button type="button" class="btn btn-outline-${color} download-hash-btn" title="Télécharger">
                         <i class="fas fa-download"></i>
                     </button>
                 </div>
             </div>
-            <pre class="bg-dark text-white p-3 rounded text-break">${content}</pre>
+            <pre class="bg-dark text-${color} p-3 rounded text-break" style="font-size:0.85rem;">${content}</pre>
         `;
 
-        // Copy functionality
-        const copyBtn = section.querySelector('.copy-hash-btn');
-        copyBtn.addEventListener('click', function() {
-            const content = this.getAttribute('data-content');
-            navigator.clipboard.writeText(content)
-                .then(() => {
-                    const existing = this.parentNode.parentNode.querySelector('.copy-tooltip-hash');
-                    if (existing) existing.remove();
+        const pre = section.querySelector('pre');
 
-                    const tip = document.createElement('span');
-                    tip.className = 'copy-tooltip-hash';
-                    tip.textContent = 'Copié !';
-                    this.parentNode.appendChild(tip);
-
-                    requestAnimationFrame(() => tip.classList.add('show'));
-                    setTimeout(() => tip.classList.remove('show'), 1400);
-                    setTimeout(() => tip.remove(), 1700);
-                })
-                .catch(err => console.error('Erreur lors de la copie : ', err));
+        section.querySelector('.copy-hash-btn').addEventListener('click', function() {
+            navigator.clipboard.writeText(pre.textContent).then(() => {
+                const orig = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-check"></i>';
+                setTimeout(() => { this.innerHTML = orig; }, 1500);
+            }).catch(err => console.error('Erreur copie :', err));
         });
 
-        // Download functionality
-        const downloadBtn = section.querySelector('.download-hash-btn');
-        downloadBtn.addEventListener('click', function() {
-            const content = this.getAttribute('data-content');
-            const filename = this.getAttribute('data-filename');
-            const blob = new Blob([content], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+        section.querySelector('.download-hash-btn').addEventListener('click', function() {
+            const blob = new Blob([pre.textContent], { type: 'text/plain' });
+            const url  = URL.createObjectURL(blob);
+            const a    = Object.assign(document.createElement('a'), { href: url, download: filename });
+            document.body.appendChild(a); a.click();
+            document.body.removeChild(a); URL.revokeObjectURL(url);
         });
 
         return section;
@@ -423,6 +420,15 @@ document.addEventListener('DOMContentLoaded', function() {
         if (hashDigest) hashDigest.addEventListener('change', debounce(() => renderHashes(hashInput.value), 100));
         if (hashSecret) hashSecret.addEventListener('input', debounce(() => renderHashes(hashInput.value), 250));
         renderHashes(hashInput.value);
+    }
+
+    const hashClearBtn = document.getElementById('hash-clear');
+    if (hashClearBtn) {
+        hashClearBtn.addEventListener('click', function() {
+            if (hashInput) hashInput.value = '';
+            if (hashSecret) hashSecret.value = '';
+            if (hashResult) hashResult.innerHTML = '';
+        });
     }
 
     // Bcrypt Password Hashing
@@ -486,7 +492,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                     
                     bcryptResult.innerHTML = '';
-                    bcryptResult.appendChild(createHashFormatSection('Bcrypt Hash', hash));
+                    bcryptResult.appendChild(createHashFormatSection('Bcrypt Hash', hash, 'success'));
                 });
             } else {
                 bcryptResult.innerHTML = '<div class="text-danger">Librairie bcrypt non disponible</div>';
@@ -494,23 +500,31 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    const bcryptClearBtn = document.getElementById('bcrypt-clear');
+    if (bcryptClearBtn) {
+        bcryptClearBtn.addEventListener('click', function() {
+            if (bcryptInput) bcryptInput.value = '';
+            if (bcryptResult) bcryptResult.innerHTML = '';
+        });
+    }
+
     // Key Generator
-    const keyTypeSelect = document.getElementById('key-type');
-    const keySizeContainer = document.getElementById('key-size-container');
+    const keyTypeSelect       = document.getElementById('key-type');
+    const keySizeContainer    = document.getElementById('key-size-container');
     const ecdsaCurveContainer = document.getElementById('ecdsa-curve-container');
-    const keyTypeOptions = ['key-size-container', 'ecdsa-curve-container'];
+    const keySizeNa           = document.getElementById('key-size-na');
+
+    function updateKeySizeVisibility(value) {
+        keySizeContainer.style.display    = value === 'rsa'   ? '' : 'none';
+        ecdsaCurveContainer.style.display = value === 'ecdsa' ? '' : 'none';
+        if (keySizeNa) keySizeNa.style.display = value === 'ed25519' ? '' : 'none';
+    }
 
     if (keyTypeSelect) {
         keyTypeSelect.addEventListener('change', function() {
-            keySizeContainer.style.display = 'none';
-            ecdsaCurveContainer.style.display = 'none';
-            
-            if (this.value === 'rsa') {
-                keySizeContainer.style.display = 'block';
-            } else if (this.value === 'ecdsa') {
-                ecdsaCurveContainer.style.display = 'block';
-            }
+            updateKeySizeVisibility(this.value);
         });
+        updateKeySizeVisibility(keyTypeSelect.value);
     }
 
     const generateKeyBtn = document.getElementById('generate-key');
@@ -534,59 +548,53 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    function createKeyFormatSection(title, content, filename) {
+    const keyClearBtn = document.getElementById('key-clear');
+    if (keyClearBtn) {
+        keyClearBtn.addEventListener('click', function() {
+            const keyResult = document.getElementById('key-result');
+            if (keyResult) keyResult.innerHTML = '';
+        });
+    }
+
+    function createKeyFormatSection(title, content, filename, color) {
+        color = color || 'success';
+        const icon = color === 'warning' ? 'fa-key'
+                   : color === 'success' ? 'fa-lock-open'
+                   : color === 'info'    ? 'fa-terminal'
+                   : 'fa-plug-circle-bolt';
         const section = document.createElement('div');
-        section.className = 'key-format-section mb-4';
+        section.className = 'key-format-section mb-3';
         section.innerHTML = `
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <h6 class="mb-0">${title}</h6>
+            <div class="d-flex justify-content-between align-items-center mb-1">
+                <h6 class="mb-0 text-${color}"><i class="fas ${icon} me-1"></i>${title}</h6>
                 <div class="btn-group btn-group-sm">
-                    <button type="button" class="btn btn-outline-primary copy-key-btn" data-content="${content.replace(/"/g, '&quot;')}">
+                    <button type="button" class="btn btn-outline-${color} copy-key-btn" title="Copier">
                         <i class="fas fa-copy"></i>
                     </button>
-                    <button type="button" class="btn btn-outline-success download-key-btn" data-content="${content.replace(/"/g, '&quot;')}" data-filename="${filename}">
+                    <button type="button" class="btn btn-outline-${color} download-key-btn" title="Télécharger">
                         <i class="fas fa-download"></i>
                     </button>
                 </div>
             </div>
-            <pre class="bg-dark text-white p-3 rounded text-break">${content}</pre>
+            <pre class="bg-dark text-${color} p-3 rounded text-break" style="max-height:200px;overflow-y:auto;font-size:0.75rem;">${content}</pre>
         `;
 
-        // Copy functionality
-        const copyBtn = section.querySelector('.copy-key-btn');
-        copyBtn.addEventListener('click', function() {
-            const content = this.getAttribute('data-content');
-            navigator.clipboard.writeText(content)
-                .then(() => {
-                    const existing = this.parentNode.parentNode.querySelector('.copy-tooltip-key');
-                    if (existing) existing.remove();
+        const pre = section.querySelector('pre');
 
-                    const tip = document.createElement('span');
-                    tip.className = 'copy-tooltip-key';
-                    tip.textContent = 'Copié !';
-                    this.parentNode.appendChild(tip);
-
-                    requestAnimationFrame(() => tip.classList.add('show'));
-                    setTimeout(() => tip.classList.remove('show'), 1400);
-                    setTimeout(() => tip.remove(), 1700);
-                })
-                .catch(err => console.error('Erreur lors de la copie : ', err));
+        section.querySelector('.copy-key-btn').addEventListener('click', function() {
+            navigator.clipboard.writeText(pre.textContent).then(() => {
+                const orig = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-check"></i>';
+                setTimeout(() => { this.innerHTML = orig; }, 1500);
+            }).catch(err => console.error('Erreur copie :', err));
         });
 
-        // Download functionality
-        const downloadBtn = section.querySelector('.download-key-btn');
-        downloadBtn.addEventListener('click', function() {
-            const content = this.getAttribute('data-content');
-            const filename = this.getAttribute('data-filename');
-            const blob = new Blob([content], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+        section.querySelector('.download-key-btn').addEventListener('click', function() {
+            const blob = new Blob([pre.textContent], { type: 'text/plain' });
+            const url  = URL.createObjectURL(blob);
+            const a    = Object.assign(document.createElement('a'), { href: url, download: filename });
+            document.body.appendChild(a); a.click();
+            document.body.removeChild(a); URL.revokeObjectURL(url);
         });
 
         return section;
@@ -615,10 +623,10 @@ ${btoa(privateKey)}
 Private-MAC: `;
 
         keyResult.innerHTML = '';
-        keyResult.appendChild(createKeyFormatSection('PEM - Clé Privée', privateKey, `id_rsa_${keySize}`));
-        keyResult.appendChild(createKeyFormatSection('PEM - Clé Publique', publicKey, `id_rsa_${keySize}.pub`));
-        keyResult.appendChild(createKeyFormatSection('SSH - Clé Publique', sshFormat, `id_rsa_${keySize}.pub`));
-        keyResult.appendChild(createKeyFormatSection('PPK - Format PuTTY', ppkFormat, `id_rsa_${keySize}.ppk`));
+        keyResult.appendChild(createKeyFormatSection('PEM - Clé Privée',   privateKey, `id_rsa_${keySize}`,       'warning'));
+        keyResult.appendChild(createKeyFormatSection('PEM - Clé Publique', publicKey,  `id_rsa_${keySize}.pub`,   'success'));
+        keyResult.appendChild(createKeyFormatSection('SSH - Clé Publique', sshFormat,  `id_rsa_${keySize}.pub`,   'info'));
+        keyResult.appendChild(createKeyFormatSection('PPK - Format PuTTY', ppkFormat,  `id_rsa_${keySize}.ppk`,   'secondary'));
     }
 
     function generateECDSAKey(keyResult) {
@@ -654,9 +662,9 @@ ${btoa(privateKeyPEM)}
 Private-MAC: `;
 
         keyResult.innerHTML = '';
-        keyResult.appendChild(createKeyFormatSection('PEM - Clé Privée', privateKeyPEM, `id_ecdsa_${curve}`));
-        keyResult.appendChild(createKeyFormatSection('SSH - Clé Publique', sshFormat, `id_ecdsa_${curve}.pub`));
-        keyResult.appendChild(createKeyFormatSection('PPK - Format PuTTY', ppkFormat, `id_ecdsa_${curve}.ppk`));
+        keyResult.appendChild(createKeyFormatSection('PEM - Clé Privée',   privateKeyPEM, `id_ecdsa_${curve}`,       'warning'));
+        keyResult.appendChild(createKeyFormatSection('SSH - Clé Publique', sshFormat,     `id_ecdsa_${curve}.pub`,   'info'));
+        keyResult.appendChild(createKeyFormatSection('PPK - Format PuTTY', ppkFormat,     `id_ecdsa_${curve}.ppk`,   'secondary'));
     }
 
     function generateEd25519Key(keyResult) {
@@ -683,10 +691,10 @@ ${btoa(privateKeyOpenSSH)}
 Private-MAC: `;
 
         keyResult.innerHTML = '';
-        keyResult.appendChild(createKeyFormatSection('PEM - Clé Privée', privateKeyPEM, 'id_ed25519'));
-        keyResult.appendChild(createKeyFormatSection('OpenSSH - Clé Privée', privateKeyOpenSSH, 'id_ed25519'));
-        keyResult.appendChild(createKeyFormatSection('SSH - Clé Publique', publicKeySSH, 'id_ed25519.pub'));
-        keyResult.appendChild(createKeyFormatSection('PPK - Format PuTTY', ppkFormat, 'id_ed25519.ppk'));
+        keyResult.appendChild(createKeyFormatSection('PEM - Clé Privée',      privateKeyPEM,    'id_ed25519',     'warning'));
+        keyResult.appendChild(createKeyFormatSection('OpenSSH - Clé Privée',  privateKeyOpenSSH,'id_ed25519',     'warning'));
+        keyResult.appendChild(createKeyFormatSection('SSH - Clé Publique',    publicKeySSH,     'id_ed25519.pub', 'success'));
+        keyResult.appendChild(createKeyFormatSection('PPK - Format PuTTY',    ppkFormat,        'id_ed25519.ppk', 'secondary'));
     }
 
     // Base64
@@ -701,15 +709,8 @@ Private-MAC: `;
         encodeBase64Btn.addEventListener('click', function() {
             const base64Input = document.getElementById('base64-input');
             if (!base64Input) return;
-
-            const input = base64Input.value;
-            const encoded = btoa(unescape(encodeURIComponent(input)));
-            base64Result.textContent = encoded;
+            base64Result.textContent = btoa(unescape(encodeURIComponent(base64Input.value)));
             base64ResultContainer.style.display = 'block';
-
-            // Update button data
-            copyBase64Btn.setAttribute('data-content', encoded);
-            downloadBase64Btn.setAttribute('data-content', encoded);
         });
     }
 
@@ -717,60 +718,44 @@ Private-MAC: `;
         decodeBase64Btn.addEventListener('click', function() {
             const base64Input = document.getElementById('base64-input');
             if (!base64Input) return;
-
-            const input = base64Input.value;
             try {
-                const decoded = decodeURIComponent(escape(atob(input)));
-                base64Result.textContent = decoded;
-                base64ResultContainer.style.display = 'block';
-
-                // Update button data
-                copyBase64Btn.setAttribute('data-content', decoded);
-                downloadBase64Btn.setAttribute('data-content', decoded);
+                base64Result.textContent = decodeURIComponent(escape(atob(base64Input.value)));
             } catch (e) {
                 base64Result.textContent = 'Erreur : entrée invalide.';
-                base64ResultContainer.style.display = 'block';
             }
+            base64ResultContainer.style.display = 'block';
         });
     }
 
     if (copyBase64Btn) {
         copyBase64Btn.addEventListener('click', function() {
-            const content = this.getAttribute('data-content');
-            if (!content) return;
-
-            navigator.clipboard.writeText(content)
-                .then(() => {
-                    const existing = this.parentNode.parentNode.querySelector('.copy-tooltip-hash');
-                    if (existing) existing.remove();
-
-                    const tip = document.createElement('span');
-                    tip.className = 'copy-tooltip-hash';
-                    tip.textContent = 'Copié !';
-                    this.parentNode.appendChild(tip);
-
-                    requestAnimationFrame(() => tip.classList.add('show'));
-                    setTimeout(() => tip.classList.remove('show'), 1400);
-                    setTimeout(() => tip.remove(), 1700);
-                })
-                .catch(err => console.error('Erreur lors de la copie : ', err));
+            if (!base64Result.textContent) return;
+            navigator.clipboard.writeText(base64Result.textContent).then(() => {
+                const orig = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-check"></i>';
+                setTimeout(() => { this.innerHTML = orig; }, 1500);
+            }).catch(err => console.error('Erreur copie :', err));
         });
     }
 
     if (downloadBase64Btn) {
         downloadBase64Btn.addEventListener('click', function() {
-            const content = this.getAttribute('data-content');
-            if (!content) return;
+            if (!base64Result.textContent) return;
+            const blob = new Blob([base64Result.textContent], { type: 'text/plain' });
+            const url  = URL.createObjectURL(blob);
+            const a    = Object.assign(document.createElement('a'), { href: url, download: 'base64.txt' });
+            document.body.appendChild(a); a.click();
+            document.body.removeChild(a); URL.revokeObjectURL(url);
+        });
+    }
 
-            const blob = new Blob([content], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'base64.txt';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+    const clearBase64Btn = document.getElementById('clear-base64');
+    if (clearBase64Btn) {
+        clearBase64Btn.addEventListener('click', function() {
+            const base64Input = document.getElementById('base64-input');
+            if (base64Input) base64Input.value = '';
+            if (base64Result) base64Result.textContent = '';
+            if (base64ResultContainer) base64ResultContainer.style.display = 'none';
         });
     }
 
@@ -940,6 +925,557 @@ Private-MAC: `;
             `;
         });
     }
+
+    // JWT Decoder
+    (function() {
+        const jwtInput      = document.getElementById('jwt-input');
+        const jwtDecodeBtn  = document.getElementById('jwt-decode-btn');
+        const jwtClearBtn   = document.getElementById('jwt-clear-btn');
+        const jwtResult     = document.getElementById('jwt-result');
+        const jwtError      = document.getElementById('jwt-error');
+        const jwtHeaderOut  = document.getElementById('jwt-header-out');
+        const jwtPayloadOut = document.getElementById('jwt-payload-out');
+        const jwtSigOut     = document.getElementById('jwt-signature-out');
+        const jwtClaims     = document.getElementById('jwt-claims');
+        const jwtClaimsSec  = document.getElementById('jwt-claims-section');
+
+        if (!jwtDecodeBtn) return;
+
+        function b64urlDecode(str) {
+            str = str.replace(/-/g, '+').replace(/_/g, '/');
+            while (str.length % 4) str += '=';
+            return atob(str);
+        }
+
+        function showError(msg) {
+            jwtError.textContent = msg;
+            jwtError.classList.remove('d-none');
+        }
+
+        function claimBadge(key, value) {
+            const badge = document.createElement('span');
+            badge.className = 'badge bg-secondary font-monospace';
+            let display = value;
+            if ((key === 'exp' || key === 'iat' || key === 'nbf') && typeof value === 'number') {
+                const d = new Date(value * 1000);
+                const expired = key === 'exp' && d < new Date();
+                display = `${d.toLocaleString()}`;
+                badge.className = `badge ${expired ? 'bg-danger' : 'bg-success'}`;
+            }
+            badge.title = key;
+            badge.textContent = `${key}: ${display}`;
+            return badge;
+        }
+
+        jwtDecodeBtn.addEventListener('click', function() {
+            const raw = jwtInput.value.trim();
+            jwtError.classList.add('d-none');
+
+            if (!raw) { showError('Veuillez coller un token JWT.'); return; }
+
+            const parts = raw.split('.');
+            if (parts.length !== 3) { showError('Format invalide : un JWT doit comporter 3 parties séparées par des points.'); return; }
+
+            let header, payload;
+            try { header  = JSON.parse(b64urlDecode(parts[0])); } catch(e) { showError('Impossible de décoder le header : ' + e.message); return; }
+            try { payload = JSON.parse(b64urlDecode(parts[1])); } catch(e) { showError('Impossible de décoder le payload : ' + e.message); return; }
+
+            jwtHeaderOut.textContent  = JSON.stringify(header,  null, 2);
+            jwtPayloadOut.textContent = JSON.stringify(payload, null, 2);
+            jwtSigOut.textContent     = parts[2];
+
+            // Claims notables
+            const notableClaims = ['iss','sub','aud','exp','iat','nbf','jti'];
+            jwtClaims.innerHTML = '';
+            let hasClaims = false;
+            notableClaims.forEach(k => {
+                if (payload[k] !== undefined) {
+                    jwtClaims.appendChild(claimBadge(k, payload[k]));
+                    hasClaims = true;
+                }
+            });
+            jwtClaimsSec.style.display = hasClaims ? '' : 'none';
+        });
+
+        jwtClearBtn.addEventListener('click', function() {
+            jwtInput.value = '';
+            jwtHeaderOut.textContent  = 'Décodez un JWT pour voir le header.';
+            jwtPayloadOut.textContent = 'Décodez un JWT pour voir le payload.';
+            jwtSigOut.textContent     = '–';
+            jwtClaimsSec.style.display = 'none';
+            jwtError.classList.add('d-none');
+        });
+
+        function copyText(text, btn) {
+            navigator.clipboard.writeText(text).then(() => {
+                const orig = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check"></i>';
+                setTimeout(() => { btn.innerHTML = orig; }, 1500);
+            });
+        }
+
+        document.getElementById('jwt-copy-header')?.addEventListener('click', () => copyText(jwtHeaderOut.textContent, document.getElementById('jwt-copy-header')));
+        document.getElementById('jwt-copy-payload')?.addEventListener('click', () => copyText(jwtPayloadOut.textContent, document.getElementById('jwt-copy-payload')));
+    })();
+
+    // Certificate Generator
+    (function() {
+        const certAlgo        = document.getElementById('cert-algo');
+        const certKeySize     = document.getElementById('cert-key-size');
+        const certEcCurve     = document.getElementById('cert-ec-curve');
+        const certCN          = document.getElementById('cert-cn');
+        const certO           = document.getElementById('cert-o');
+        const certOU          = document.getElementById('cert-ou');
+        const certL           = document.getElementById('cert-l');
+        const certST          = document.getElementById('cert-st');
+        const certC           = document.getElementById('cert-c');
+        const certValidity    = document.getElementById('cert-validity');
+        const certSanList     = document.getElementById('cert-san-list');
+        const certAddSan      = document.getElementById('cert-add-san');
+        const certGenSelf     = document.getElementById('cert-gen-selfsigned');
+        const certGenCSR      = document.getElementById('cert-gen-csr');
+        const certLoading     = document.getElementById('cert-loading');
+        const certLoadingMsg  = document.getElementById('cert-loading-msg');
+        const certError       = document.getElementById('cert-error');
+        const certResult      = document.getElementById('cert-result');
+        const certPrivkeyOut  = document.getElementById('cert-privkey-out');
+        const certCertOut     = document.getElementById('cert-cert-out');
+        const certOutputLabel = document.getElementById('cert-output-label');
+
+        if (!certGenSelf) return;
+
+        // Switch RSA / ECC key size selectors
+        certAlgo.addEventListener('change', function() {
+            if (this.value === 'rsa') {
+                certKeySize.classList.remove('d-none');
+                certEcCurve.classList.add('d-none');
+            } else {
+                certKeySize.classList.add('d-none');
+                certEcCurve.classList.remove('d-none');
+            }
+        });
+
+        // SAN helpers
+        function addSanEntry(type, value) {
+            const div = document.createElement('div');
+            div.className = 'd-flex gap-2 mb-2 cert-san-entry';
+            div.innerHTML = `
+                <select class="form-select form-select-sm" style="width:90px;flex:none;">
+                    <option value="dns"${type==='dns'?' selected':''}>DNS</option>
+                    <option value="ip"${type==='ip'?' selected':''}>IP</option>
+                </select>
+                <input type="text" class="form-control form-control-sm" placeholder="${type==='ip'?'192.168.1.1':'exemple.com'}" value="${value||''}">
+                <button type="button" class="btn btn-sm btn-outline-danger cert-san-rm"><i class="fas fa-times"></i></button>`;
+            div.querySelector('.cert-san-rm').addEventListener('click', function() {
+                if (document.querySelectorAll('.cert-san-entry').length > 1) div.remove();
+            });
+            div.querySelector('select').addEventListener('change', function() {
+                div.querySelector('input').placeholder = this.value === 'ip' ? '192.168.1.1' : 'exemple.com';
+            });
+            certSanList.appendChild(div);
+        }
+
+        // Default: 1 SAN DNS vide
+        addSanEntry('dns', '');
+
+        // CN => premier SAN auto-sync
+        certCN.addEventListener('input', function() {
+            const first = certSanList.querySelector('.cert-san-entry input');
+            if (first && (first.dataset.touched !== '1')) first.value = this.value;
+        });
+        certSanList.addEventListener('input', function(e) {
+            if (e.target.matches('.cert-san-entry input')) e.target.dataset.touched = '1';
+        });
+
+        certAddSan.addEventListener('click', () => addSanEntry('dns', ''));
+
+        function buildSubject() {
+            let s = '';
+            const add = (key, el) => { const v = el.value.trim(); if (v) s += `/${key}=${v}`; };
+            add('CN', certCN);
+            add('O', certO);
+            add('OU', certOU);
+            add('L', certL);
+            add('ST', certST);
+            const c = certC.value.trim().toUpperCase().slice(0,2);
+            if (c) s += `/C=${c}`;
+            return s;
+        }
+
+        function getSanArray() {
+            const arr = [];
+            certSanList.querySelectorAll('.cert-san-entry').forEach(e => {
+                const type = e.querySelector('select').value;
+                const val  = e.querySelector('input').value.trim();
+                if (val) arr.push(type === 'ip' ? {ip: val} : {dns: val});
+            });
+            if (!arr.length) {
+                const cn = certCN.value.trim();
+                if (cn) arr.push({dns: cn});
+            }
+            return arr;
+        }
+
+        function utcStr(date) {
+            return date.getUTCFullYear() +
+                String(date.getUTCMonth()+1).padStart(2,'0') +
+                String(date.getUTCDate()).padStart(2,'0') +
+                '000000Z';
+        }
+
+        function showErr(msg) {
+            certError.textContent = msg;
+            certError.classList.remove('d-none');
+            certLoading.classList.add('d-none');
+        }
+
+        function showResult(privPEM, outPEM, isCSR, dlExt) {
+            certPrivkeyOut.textContent = privPEM;
+            certCertOut.textContent    = outPEM;
+            certOutputLabel.innerHTML  = isCSR
+                ? '<i class="fas fa-file-alt me-1 text-success"></i> CSR (PKCS#10)'
+                : '<i class="fas fa-certificate me-1 text-success"></i> Certificat autosigné';
+            const dlBtn = document.getElementById('cert-dl-cert');
+            if (dlBtn) dlBtn.dataset.ext = dlExt;
+            certLoading.classList.add('d-none');
+            certError.classList.add('d-none');
+        }
+
+        function generate(mode) {
+            const cn = certCN.value.trim();
+            if (!cn) { showErr('Le Common Name (CN) est obligatoire.'); return; }
+
+            certError.classList.add('d-none');
+
+            const isRSA  = certAlgo.value === 'rsa';
+            const rsaBits = parseInt(certKeySize.value);
+
+            certLoadingMsg.textContent = isRSA && rsaBits === 4096
+                ? 'Génération RSA 4096 bits en cours (peut prendre 10-30 s)…'
+                : 'Génération en cours…';
+            certLoading.classList.remove('d-none');
+
+            setTimeout(() => {
+                try {
+                    if (typeof KEYUTIL === 'undefined') {
+                        showErr('Librairie jsrsasign non chargée.'); return;
+                    }
+
+                    let kp, sigAlg;
+                    if (isRSA) {
+                        kp     = KEYUTIL.generateKeypair('RSA', rsaBits);
+                        sigAlg = 'SHA256withRSA';
+                    } else {
+                        kp     = KEYUTIL.generateKeypair('EC', certEcCurve.value);
+                        sigAlg = 'SHA256withECDSA';
+                    }
+
+                    const privPEM  = KEYUTIL.getPEM(kp.prvKeyObj, 'PKCS8PRV');
+                    const subject  = buildSubject();
+                    const sanArray = getSanArray();
+
+                    if (mode === 'csr') {
+                        const csrOpts = {
+                            subject:    {str: subject},
+                            sbjpubkey:  kp.pubKeyObj,
+                            sigalg:     sigAlg,
+                            sbjprvkey:  kp.prvKeyObj
+                        };
+                        if (sanArray.length) {
+                            csrOpts.extreq = [{extname: 'subjectAltName', array: sanArray}];
+                        }
+                        const csrPEM = KJUR.asn1.csr.CSRUtil.newCSRPEM(csrOpts);
+                        showResult(privPEM, csrPEM, true, 'csr');
+
+                    } else {
+                        const today   = new Date();
+                        const notAfter = new Date(today.getTime() + parseInt(certValidity.value) * 86400000);
+                        const exts = [
+                            {extname: 'basicConstraints', cA: false},
+                            {extname: 'keyUsage', critical: true, names: ['digitalSignature', 'keyEncipherment']}
+                        ];
+                        if (sanArray.length) exts.push({extname: 'subjectAltName', array: sanArray});
+
+                        const cert = new KJUR.asn1.x509.Certificate({
+                            version:   3,
+                            serial:    {int: (Math.floor(Math.random() * 0xFFFFFF) + 1)},
+                            issuer:    {str: subject},
+                            subject:   {str: subject},
+                            notbefore: {str: utcStr(today)},
+                            notafter:  {str: utcStr(notAfter)},
+                            sbjpubkey: kp.pubKeyObj,
+                            ext:       exts,
+                            cakey:     kp.prvKeyObj,
+                            sigalg:    sigAlg
+                        });
+                        showResult(privPEM, cert.getPEM(), false, 'crt');
+                    }
+                } catch(e) {
+                    showErr('Erreur : ' + e.message);
+                    console.error(e);
+                }
+            }, 80);
+        }
+
+        certGenSelf.addEventListener('click', () => generate('selfsigned'));
+        certGenCSR.addEventListener('click',  () => generate('csr'));
+
+        // Copy / Download
+        function copyPEM(btnId, srcId) {
+            document.getElementById(btnId)?.addEventListener('click', function() {
+                navigator.clipboard.writeText(document.getElementById(srcId).textContent).then(() => {
+                    const orig = this.innerHTML;
+                    this.innerHTML = '<i class="fas fa-check"></i>';
+                    setTimeout(() => { this.innerHTML = orig; }, 1500);
+                });
+            });
+        }
+        function dlPEM(btnId, srcId, defaultName) {
+            document.getElementById(btnId)?.addEventListener('click', function() {
+                const ext  = this.dataset.ext || defaultName.split('.').pop();
+                const name = defaultName.replace(/\.[^.]+$/, '.' + ext);
+                const blob = new Blob([document.getElementById(srcId).textContent], {type: 'text/plain'});
+                const url  = URL.createObjectURL(blob);
+                const a    = Object.assign(document.createElement('a'), {href: url, download: name});
+                document.body.appendChild(a); a.click();
+                document.body.removeChild(a); URL.revokeObjectURL(url);
+            });
+        }
+        copyPEM('cert-copy-privkey', 'cert-privkey-out');
+        copyPEM('cert-copy-cert',    'cert-cert-out');
+        dlPEM('cert-dl-privkey', 'cert-privkey-out', 'private.key');
+        dlPEM('cert-dl-cert',    'cert-cert-out',    'certificate.crt');
+
+        document.getElementById('cert-clear')?.addEventListener('click', function() {
+            ['cert-cn','cert-o','cert-ou','cert-l','cert-st','cert-c'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.value = '';
+            });
+            document.getElementById('cert-san-list').innerHTML = '';
+            if (certPrivkeyOut) certPrivkeyOut.textContent = 'Générez un certificat ou un CSR pour voir la clé privée.';
+            if (certCertOut)    certCertOut.textContent    = 'Générez un certificat ou un CSR pour voir le résultat.';
+            document.getElementById('cert-error')?.classList.add('d-none');
+        });
+    })();
+
+    // UUID Generator
+    (function() {
+        const uuidVersion  = document.getElementById('uuid-version');
+        const uuidCount    = document.getElementById('uuid-count');
+        const uuidNsSec    = document.getElementById('uuid-namespace-section');
+        const uuidNs       = document.getElementById('uuid-namespace');
+        const uuidName     = document.getElementById('uuid-name');
+        const uuidGenBtn   = document.getElementById('uuid-generate');
+        const uuidList        = document.getElementById('uuid-list');
+        const uuidResultBlock = document.getElementById('uuid-result-block');
+        const uuidCopyAll     = document.getElementById('uuid-copy-all');
+        const uuidDlAll       = document.getElementById('uuid-download-all');
+        if (!uuidGenBtn) return;
+
+        const NS = {
+            dns:  '6ba7b810-9dad-11d1-80b4-00c04fd430c8',
+            url:  '6ba7b811-9dad-11d1-80b4-00c04fd430c8',
+            oid:  '6ba7b812-9dad-11d1-80b4-00c04fd430c8',
+            x500: '6ba7b814-9dad-11d1-80b4-00c04fd430c8'
+        };
+
+        uuidVersion.addEventListener('change', function() {
+            uuidNsSec.style.display = (this.value === '3' || this.value === '5') ? '' : 'none';
+        });
+
+        function uuidToBytes(uuid) {
+            const h = uuid.replace(/-/g, '');
+            return Array.from({length: 16}, (_, i) => parseInt(h.substr(i * 2, 2), 16));
+        }
+
+        function applyVersionVariant(hashHex, version) {
+            const h = hashHex.slice(0, 32);
+            const v  = ((parseInt(h[12], 16) & 0x0F) | (version << 4)).toString(16);
+            const va = ((parseInt(h[16], 16) & 0x3F) | 0x80).toString(16);
+            return `${h.slice(0,8)}-${h.slice(8,12)}-${v}${h.slice(13,16)}-${va}${h.slice(17,20)}-${h.slice(20,32)}`;
+        }
+
+        function genV1() {
+            const t = BigInt(Date.now()) * 10000n + 122192928000000000n;
+            const tl  = (t & 0xFFFFFFFFn).toString(16).padStart(8, '0');
+            const tm  = ((t >> 32n) & 0xFFFFn).toString(16).padStart(4, '0');
+            const th  = (((t >> 48n) & 0x0FFFn) | 0x1000n).toString(16).padStart(4, '0');
+            const clk = ((Math.random() * 0x3FFF | 0) | 0x8000).toString(16).padStart(4, '0');
+            const node = Array.from(crypto.getRandomValues(new Uint8Array(6)))
+                             .map(b => b.toString(16).padStart(2, '0')).join('');
+            return `${tl}-${tm}-${th}-${clk}-${node}`;
+        }
+
+        function genV4() {
+            if (crypto.randomUUID) return crypto.randomUUID();
+            return '10000000-1000-4000-8000-100000000000'.replace(/[018]/g, c =>
+                (+c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> +c / 4).toString(16));
+        }
+
+        function genV3(nsKey, name) {
+            const data = new Uint8Array([...uuidToBytes(NS[nsKey]), ...new TextEncoder().encode(name)]);
+            const hash = CryptoJS.MD5(CryptoJS.lib.WordArray.create(data)).toString();
+            return applyVersionVariant(hash, 3);
+        }
+
+        function genV5(nsKey, name) {
+            const data = new Uint8Array([...uuidToBytes(NS[nsKey]), ...new TextEncoder().encode(name)]);
+            const hash = sha1(data);
+            return applyVersionVariant(hash, 5);
+        }
+
+        function genV7() {
+            const tsHex = BigInt(Date.now()).toString(16).padStart(12, '0');
+            const rand  = crypto.getRandomValues(new Uint8Array(10));
+            const verRand = (0x7000 | ((rand[0] & 0x0F) << 8 | rand[1])).toString(16).padStart(4, '0');
+            rand[2] = (rand[2] & 0x3F) | 0x80;
+            const randB = Array.from(rand.slice(2)).map(b => b.toString(16).padStart(2, '0')).join('');
+            return `${tsHex.slice(0,8)}-${tsHex.slice(8,12)}-${verRand}-${randB.slice(0,4)}-${randB.slice(4)}`;
+        }
+
+        function generateOne(ver, nsKey, name) {
+            switch (ver) {
+                case '1': return genV1();
+                case '3': return genV3(nsKey, name);
+                case '4': return genV4();
+                case '5': return genV5(nsKey, name);
+                case '7': return genV7();
+                default:  return genV4();
+            }
+        }
+
+        let lastUUIDs = [];
+
+        function renderUUIDs(uuids) {
+            uuidList.innerHTML = '';
+            uuids.forEach(uuid => {
+                const row = document.createElement('div');
+                row.className = 'd-flex align-items-center justify-content-between gap-2 mb-1';
+                const code = document.createElement('span');
+                code.className = 'text-info';
+                code.textContent = uuid;
+                const btn = document.createElement('button');
+                btn.className = 'btn btn-sm btn-outline-info flex-shrink-0';
+                btn.title = 'Copier';
+                btn.innerHTML = '<i class="fas fa-copy"></i>';
+                btn.addEventListener('click', function() {
+                    navigator.clipboard.writeText(uuid).then(() => {
+                        this.innerHTML = '<i class="fas fa-check"></i>';
+                        setTimeout(() => { this.innerHTML = '<i class="fas fa-copy"></i>'; }, 1500);
+                    });
+                });
+                row.appendChild(code);
+                row.appendChild(btn);
+                uuidList.appendChild(row);
+            });
+        }
+
+        uuidGenBtn.addEventListener('click', function() {
+            const ver   = uuidVersion.value;
+            const count = Math.min(100, Math.max(1, parseInt(uuidCount.value) || 1));
+            const nsKey = uuidNs?.value || 'dns';
+            const name  = uuidName?.value.trim() || '';
+
+            if ((ver === '3' || ver === '5') && !name) {
+                uuidList.innerHTML = '<p class="text-danger mb-0"><i class="fas fa-exclamation-triangle me-1"></i>Un nom est requis pour les versions v3 et v5.</p>';
+                return;
+            }
+            lastUUIDs = Array.from({length: count}, () => generateOne(ver, nsKey, name));
+            renderUUIDs(lastUUIDs);
+            uuidResultBlock.style.display = '';
+        });
+
+        uuidCopyAll?.addEventListener('click', function() {
+            if (!lastUUIDs.length) return;
+            navigator.clipboard.writeText(lastUUIDs.join('\n')).then(() => {
+                const orig = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-check"></i>';
+                setTimeout(() => { this.innerHTML = orig; }, 1500);
+            });
+        });
+
+        document.getElementById('uuid-clear')?.addEventListener('click', function() {
+            lastUUIDs = [];
+            uuidList.innerHTML = '';
+            uuidResultBlock.style.display = 'none';
+        });
+
+        uuidDlAll?.addEventListener('click', function() {
+            if (!lastUUIDs.length) return;
+            const blob = new Blob([lastUUIDs.join('\n')], {type: 'text/plain'});
+            const url  = URL.createObjectURL(blob);
+            const a    = Object.assign(document.createElement('a'), {href: url, download: 'uuids.txt'});
+            document.body.appendChild(a); a.click();
+            document.body.removeChild(a); URL.revokeObjectURL(url);
+        });
+    })();
+
+    // Hex (Base16) Encoder / Decoder
+    (function() {
+        const hexInput     = document.getElementById('hex-input');
+        const encodeBtn    = document.getElementById('encode-hex');
+        const decodeBtn    = document.getElementById('decode-hex');
+        const clearBtn     = document.getElementById('clear-hex');
+        const resultBlock  = document.getElementById('hex-result-container');
+        const resultPre    = document.getElementById('hex-result');
+        const copyBtn      = document.getElementById('copy-hex');
+        const dlBtn        = document.getElementById('download-hex');
+        if (!encodeBtn) return;
+
+        function showResult(text) {
+            resultPre.textContent = text;
+            resultBlock.style.display = '';
+        }
+
+        encodeBtn.addEventListener('click', function() {
+            const input = hexInput.value;
+            if (!input) return;
+            const hex = Array.from(new TextEncoder().encode(input))
+                .map(b => b.toString(16).padStart(2, '0'))
+                .join('');
+            showResult(hex);
+        });
+
+        decodeBtn.addEventListener('click', function() {
+            const input = hexInput.value.trim().replace(/\s+/g, '');
+            if (!input) return;
+            if (!/^[0-9a-fA-F]+$/.test(input) || input.length % 2 !== 0) {
+                showResult('Erreur : valeur hexadécimale invalide (caractères non-hex ou longueur impaire).');
+                return;
+            }
+            try {
+                const bytes = new Uint8Array(input.length / 2);
+                for (let i = 0; i < input.length; i += 2) {
+                    bytes[i / 2] = parseInt(input.substr(i, 2), 16);
+                }
+                showResult(new TextDecoder().decode(bytes));
+            } catch(e) {
+                showResult('Erreur : impossible de décoder cette valeur.');
+            }
+        });
+
+        clearBtn?.addEventListener('click', function() {
+            hexInput.value = '';
+            resultPre.textContent = '';
+            resultBlock.style.display = 'none';
+        });
+
+        copyBtn?.addEventListener('click', function() {
+            navigator.clipboard.writeText(resultPre.textContent).then(() => {
+                const orig = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-check"></i>';
+                setTimeout(() => { this.innerHTML = orig; }, 1500);
+            });
+        });
+
+        dlBtn?.addEventListener('click', function() {
+            const blob = new Blob([resultPre.textContent], {type: 'text/plain'});
+            const url  = URL.createObjectURL(blob);
+            const a    = Object.assign(document.createElement('a'), {href: url, download: 'hex.txt'});
+            document.body.appendChild(a); a.click();
+            document.body.removeChild(a); URL.revokeObjectURL(url);
+        });
+    })();
 
     function cidrToSubnet(cidr) {
         const mask = (0xffffffff << (32 - cidr)) >>> 0;
