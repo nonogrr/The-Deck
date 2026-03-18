@@ -4,50 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Deck</title>
-    <!-- Bootstrap 5.3 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Google Fonts - Roboto Mono -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" href="the-deck.css">
 </head>
 <body class="bg-light">
+
     <!-- Barre de navigation supérieure -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-custom-primary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#" id="home-link">
-                <i class="fas fa-layer-group me-2"></i> The Deck
-            </a>
-            <div class="d-flex">
-                <div class="input-group me-3">
-                    <input type="text" class="form-control" id="search-input" placeholder="Rechercher un outil...">
-                    <button class="btn btn-outline-light" id="search-button">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </div>
-                <button class="btn btn-outline-light" id="theme-toggle">🌙</button>
+        <div class="container-fluid gap-3">
+            <!-- Titre + bouton réduction sidebar -->
+            <div class="d-flex align-items-center flex-shrink-0">
+                <a class="navbar-brand mb-0" href="#" id="home-link">
+                    <i class="fas fa-layer-group me-2"></i> The Deck
+                </a>
+                <button class="btn btn-link text-white p-1 ms-1" id="sidebar-collapse-btn" title="Masquer le menu">
+                    <i class="fas fa-angles-left"></i>
+                </button>
             </div>
+            <!-- Recherche (gauche) -->
+            <div id="search-wrapper" class="flex-grow-1" style="max-width:380px;">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="search-input"
+                           placeholder="Rechercher un outil…" autocomplete="off">
+                    <span class="input-group-text bg-transparent border-start-0 search-shortcut text-white border-0">Ctrl+K</span>
+                </div>
+                <div id="search-dropdown" style="display:none;"></div>
+            </div>
+            <!-- Thème (droite) -->
+            <button class="btn btn-outline-light ms-auto flex-shrink-0" id="theme-toggle"><i class="fas fa-circle-half-stroke"></i></button>
         </div>
     </nav>
 
     <div class="container-fluid">
         <div class="row flex-nowrap">
+
             <!-- Barre latérale -->
             <div class="col-auto px-0 bg-custom-sidebar" id="sidebar">
-                <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 min-vh-100">
-                    <div class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white w-100">
-                        <button class="btn btn-link text-white p-0 me-2" id="toggle-sidebar">
-                            <i class="fas fa-bars fa-lg"></i>
-                        </button>
-                    </div>
+                <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-3 min-vh-100">
                     <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start w-100" id="sidebar-menu">
-                        <li class="nav-item w-100">
-                            <a href="#" class="nav-link text-white" id="home-nav">
-                                <i class="fas fa-home me-2"></i>
-                                <span class="menu-text">Accueil</span>
-                            </a>
-                        </li>
                         <li class="nav-item w-100">
                             <a href="#" class="nav-link text-white d-flex justify-content-between align-items-center" data-bs-toggle="collapse" data-bs-target="#crypto-menu">
                                 <span class="d-flex align-items-center">
@@ -103,13 +99,33 @@
                                     <li class="nav-item w-100">
                                         <a href="#" class="nav-link text-white" data-section="jwt-decoder">
                                             <i class="fas fa-id-card me-2"></i>
-                                            <span class="menu-text">JWT Decoder</span>
+                                            <span class="menu-text">JWT</span>
                                         </a>
                                     </li>
                                     <li class="nav-item w-100">
                                         <a href="#" class="nav-link text-white" data-section="cert-generator">
                                             <i class="fas fa-certificate me-2"></i>
-                                            <span class="menu-text">Certificate Generator</span>
+                                            <span class="menu-text">Certificate</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <!-- Utilitaires -->
+                        <li class="nav-item w-100">
+                            <a href="#" class="nav-link text-white d-flex justify-content-between align-items-center" data-bs-toggle="collapse" data-bs-target="#utils-menu">
+                                <span class="d-flex align-items-center">
+                                    <i class="fas fa-wrench me-2"></i>
+                                    <span class="menu-text">Utilitaires</span>
+                                </span>
+                                <i class="fas fa-chevron-down menu-toggle"></i>
+                            </a>
+                            <div class="collapse show" id="utils-menu">
+                                <ul class="nav nav-pills flex-column ms-3 mt-2 mb-2 align-items-center align-items-sm-start w-100">
+                                    <li class="nav-item w-100">
+                                        <a href="#" class="nav-link text-white" data-section="diff-tools">
+                                            <i class="fas fa-code-compare me-2"></i>
+                                            <span class="menu-text">Diff Tools</span>
                                         </a>
                                     </li>
                                 </ul>
@@ -149,755 +165,24 @@
                 </div>
             </div>
 
-            <!-- Contenu principal -->
-            <div class="col py-3" id="main-content">
-                <!-- Home/Accueil -->
-                <div id="home-section">
-                    <div class="container">
-                        <h2 class="mb-4">Bienvenue dans The Deck</h2>
-                        <div class="row g-4">
-                            <!-- Crypto Section -->
-                            <div class="col-md-6 col-lg-3">
-                                <div class="card h-100 border-custom cursor-pointer home-card" data-section="token-generator">
-                                    <div class="card-body text-center">
-                                        <i class="fas fa-key fa-3x mb-3" style="color: var(--custom-primary);"></i>
-                                        <h5 class="card-title">Token Generator</h5>
-                                        <p class="card-text text-muted">Générez des tokens aléatoires sécurisés</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-lg-3">
-                                <div class="card h-100 border-custom cursor-pointer home-card" data-section="hash-text">
-                                    <div class="card-body text-center">
-                                        <i class="fas fa-fingerprint fa-3x mb-3" style="color: var(--custom-primary);"></i>
-                                        <h5 class="card-title">Hash / HMAC</h5>
-                                        <p class="card-text text-muted">Calculez des hashes avec clé secrète</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-lg-3">
-                                <div class="card h-100 border-custom cursor-pointer home-card" data-section="bcrypt-generator">
-                                    <div class="card-body text-center">
-                                        <i class="fas fa-shield-alt fa-3x mb-3" style="color: var(--custom-primary);"></i>
-                                        <h5 class="card-title">Bcrypt</h5>
-                                        <p class="card-text text-muted">Hashage sécurisé de mots de passe</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-lg-3">
-                                <div class="card h-100 border-custom cursor-pointer home-card" data-section="key-generator">
-                                    <div class="card-body text-center">
-                                        <i class="fas fa-lock fa-3x mb-3" style="color: var(--custom-primary);"></i>
-                                        <h5 class="card-title">Key Generator</h5>
-                                        <p class="card-text text-muted">Générez des clés cryptographiques</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-lg-3">
-                                <div class="card h-100 border-custom cursor-pointer home-card" data-section="jwt-decoder">
-                                    <div class="card-body text-center">
-                                        <i class="fas fa-id-card fa-3x mb-3" style="color: var(--custom-primary);"></i>
-                                        <h5 class="card-title">JWT Decoder</h5>
-                                        <p class="card-text text-muted">Décodez et inspectez vos tokens JWT</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-lg-3">
-                                <div class="card h-100 border-custom cursor-pointer home-card" data-section="cert-generator">
-                                    <div class="card-body text-center">
-                                        <i class="fas fa-certificate fa-3x mb-3" style="color: var(--custom-primary);"></i>
-                                        <h5 class="card-title">Certificate Generator</h5>
-                                        <p class="card-text text-muted">Générez certificats autosignés et CSR</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-lg-3">
-                                <div class="card h-100 border-custom cursor-pointer home-card" data-section="uuid-generator">
-                                    <div class="card-body text-center">
-                                        <i class="fas fa-dice fa-3x mb-3" style="color: var(--custom-primary);"></i>
-                                        <h5 class="card-title">UUID Generator</h5>
-                                        <p class="card-text text-muted">Générez des UUIDs v1, v3, v4, v5, v7</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-lg-3">
-                                <div class="card h-100 border-custom cursor-pointer home-card" data-section="hex-encoder">
-                                    <div class="card-body text-center">
-                                        <i class="fas fa-hashtag fa-3x mb-3" style="color: var(--custom-primary);"></i>
-                                        <h5 class="card-title">Hex (Base16)</h5>
-                                        <p class="card-text text-muted">Encodez et décodez en hexadécimal</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Autres outils -->
-                            <!-- Note: Base64 moved to Crypto menu -->
-                            <div class="col-md-6 col-lg-3">
-                                <div class="card h-100 border-custom cursor-pointer home-card" data-section="color-picker">
-                                    <div class="card-body text-center">
-                                        <i class="fas fa-palette fa-3x mb-3" style="color: var(--custom-primary);"></i>
-                                        <h5 class="card-title">Color Picker</h5>
-                                        <p class="card-text text-muted">Convertissez les formats de couleurs</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-lg-3">
-                                <div class="card h-100 border-custom cursor-pointer home-card" data-section="datetime-converter">
-                                    <div class="card-body text-center">
-                                        <i class="fas fa-clock fa-3x mb-3" style="color: var(--custom-primary);"></i>
-                                        <h5 class="card-title">Date-Time</h5>
-                                        <p class="card-text text-muted">Convertissez les dates et fuseaux</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-lg-3">
-                                <div class="card h-100 border-custom cursor-pointer home-card" data-section="device-info">
-                                    <div class="card-body text-center">
-                                        <i class="fas fa-mobile-alt fa-3x mb-3" style="color: var(--custom-primary);"></i>
-                                        <h5 class="card-title">Device Info</h5>
-                                        <p class="card-text text-muted">Consultez les infos de votre appareil</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-lg-3">
-                                <div class="card h-100 border-custom cursor-pointer home-card" data-section="http-codes">
-                                    <div class="card-body text-center">
-                                        <i class="fas fa-list-ol fa-3x mb-3" style="color: var(--custom-primary);"></i>
-                                        <h5 class="card-title">HTTP Codes</h5>
-                                        <p class="card-text text-muted">Consultez les codes HTTP</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-lg-3">
-                                <div class="card h-100 border-custom cursor-pointer home-card" data-section="subnet-calculator">
-                                    <div class="card-body text-center">
-                                        <i class="fas fa-network-wired fa-3x mb-3" style="color: var(--custom-primary);"></i>
-                                        <h5 class="card-title">Subnet Calculator</h5>
-                                        <p class="card-text text-muted">Calculez les subnets réseau</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <!-- Contenu principal — sections chargées dynamiquement -->
+            <div class="col py-3" id="main-content"></div>
 
-                <!-- Token Generator -->
-                <div class="card mb-3 border-0 shadow-sm d-none" id="token-generator">
-                    <div class="card-header bg-custom-primary text-white">
-                        <h5 class="mb-0"><i class="fas fa-key me-2"></i> Token Generator</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label for="token-length-range" class="form-label">Longueur : <span id="token-length-value">32</span></label>
-                            <input type="range" class="form-range" id="token-length-range" min="1" max="512" value="32">
-                        </div>
-                        <div class="mb-3">
-                            <div class="form-check form-switch mb-2">
-                                <input class="form-check-input" type="checkbox" id="uppercase" checked>
-                                <label class="form-check-label" for="uppercase">Majuscules (A-Z)</label>
-                            </div>
-                            <div class="form-check form-switch mb-2">
-                                <input class="form-check-input" type="checkbox" id="lowercase" checked>
-                                <label class="form-check-label" for="lowercase">Minuscules (a-z)</label>
-                            </div>
-                            <div class="form-check form-switch mb-2">
-                                <input class="form-check-input" type="checkbox" id="numbers" checked>
-                                <label class="form-check-label" for="numbers">Chiffres (0-9)</label>
-                            </div>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="symbols">
-                                <label class="form-check-label" for="symbols">Symboles (!@#$...)</label>
-                            </div>
-                        </div>
-                        <div class="d-flex gap-2 mb-4">
-                            <button class="btn btn-custom-primary" id="refresh-token">
-                                <i class="fas fa-sync me-2"></i> Actualiser
-                            </button>
-                        </div>
-                        <div class="result-block">
-                            <div class="d-flex justify-content-between align-items-center mb-1">
-                                <h6 class="mb-0 text-warning"><i class="fas fa-key me-1"></i> Résultat</h6>
-                                <div class="btn-group btn-group-sm">
-                                    <button type="button" class="btn btn-outline-warning" id="copy-token" title="Copier">
-                                        <i class="fas fa-copy"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-outline-warning" id="download-token" title="Télécharger">
-                                        <i class="fas fa-download"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <pre class="bg-dark text-warning p-3 rounded text-break mt-2" id="token-result" style="font-size:0.85rem;">Modifiez les paramètres pour générer un token.</pre>
-                            <div id="token-entropy" class="mt-2" style="display:none;">
-                                <small class="text-muted">Entropie : <strong id="entropy-bits"></strong> bits &mdash; <span id="entropy-badge" class="badge"></span></small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Hash Text -->
-                <div class="card mb-3 border-0 shadow-sm d-none" id="hash-text">
-                    <div class="card-header bg-custom-primary text-white">
-                        <h5 class="mb-0"><i class="fas fa-fingerprint me-2"></i> Hash Text</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label class="form-label">Contenu Source</label>
-                            <textarea class="form-control" id="hash-input" rows="4" placeholder="Texte à hacher..."></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="hash-digest" class="form-label">Format de sortie :</label>
-                            <select class="form-select" id="hash-digest">
-                                <option value="hex">Hexadécimal (hex)</option>
-                                <option value="base64">Base64</option>
-                                <option value="base64url">Base64 URL</option>
-                                <option value="base32">Base32</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="hash-secret" class="form-label">Clé secrète (optionnel) :</label>
-                            <input type="password" class="form-control" id="hash-secret" placeholder="Laissez vide pour non signé">
-                        </div>
-                        <div class="form-check mb-3">
-                            <input class="form-check-input" type="checkbox" id="hash-secret-toggle">
-                            <label class="form-check-label" for="hash-secret-toggle">
-                                Afficher la clé
-                            </label>
-                        </div>
-                        <div class="d-flex gap-2 mb-4">
-                            <button class="btn btn-outline-secondary" id="hash-clear">
-                                <i class="fas fa-times me-2"></i> Effacer
-                            </button>
-                        </div>
-                        <div id="hash-result"></div>
-                    </div>
-                </div>
-
-                <!-- Bcrypt Password Hashing -->
-                <div class="card mb-3 border-0 shadow-sm d-none" id="bcrypt-generator">
-                    <div class="card-header bg-custom-primary text-white">
-                        <h5 class="mb-0"><i class="fas fa-lock me-2"></i> Bcrypt Password Hashing</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label for="bcrypt-input" class="form-label">Mot de passe :</label>
-                            <input type="password" class="form-control" id="bcrypt-input" placeholder="Entrez un mot de passe...">
-                        </div>
-                        <div class="form-check mb-3">
-                            <input class="form-check-input" type="checkbox" id="bcrypt-toggle-password">
-                            <label class="form-check-label" for="bcrypt-toggle-password">
-                                Afficher le mot de passe
-                            </label>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Cost factor (rounds) : </label>
-                            <div class="input-group">
-                                <button class="btn btn-outline-secondary" type="button" id="bcrypt-cost-minus">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                                <input type="number" class="form-control text-center" id="bcrypt-cost" min="8" max="14" value="10" style="max-width: 80px;">
-                                <button class="btn btn-outline-secondary" type="button" id="bcrypt-cost-plus">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </div>
-                            <small class="text-muted d-block mt-1">Plus élevé = plus sécurisé mais plus lent. 10-12 recommandé.</small>
-                        </div>
-                        <div class="d-flex gap-2 mb-4">
-                            <button class="btn btn-custom-primary" id="bcrypt-generate">
-                                <i class="fas fa-shield-alt me-2"></i> Générer
-                            </button>
-                            <button class="btn btn-outline-secondary" id="bcrypt-clear">
-                                <i class="fas fa-times me-2"></i> Effacer
-                            </button>
-                        </div>
-                        <div id="bcrypt-result"></div>
-                    </div>
-                </div>
-
-                <!-- Key Generator -->
-                <div class="card mb-3 border-0 shadow-sm d-none" id="key-generator">
-                    <div class="card-header bg-custom-primary text-white">
-                        <h5 class="mb-0"><i class="fas fa-lock me-2"></i> Key Generator</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row g-3 mb-3">
-                            <div class="col-md-6">
-                                <label for="key-type" class="form-label fw-bold">Type de clé <span class="text-danger">*</span></label>
-                                <select class="form-select" id="key-type">
-                                    <option value="ed25519">ED25519</option>
-                                    <option value="rsa">RSA</option>
-                                    <option value="ecdsa">ECDSA</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Taille de clé <span class="text-danger">*</span></label>
-                                <div id="key-size-container">
-                                    <select class="form-select" id="key-size">
-                                        <option value="2048">RSA 2048 bits (standard marché)</option>
-                                        <option value="4096">RSA 4096 bits</option>
-                                    </select>
-                                </div>
-                                <div id="ecdsa-curve-container" style="display:none;">
-                                    <select class="form-select" id="ecdsa-curve">
-                                        <option value="p256">P-256 / 256 bits (standard marché)</option>
-                                        <option value="p384">P-384 / 384 bits</option>
-                                        <option value="p521">P-521 / 521 bits</option>
-                                    </select>
-                                </div>
-                                <div id="key-size-na" class="form-control bg-body-secondary text-muted" style="display:none;">—</div>
-                            </div>
-                        </div>
-                        <div class="d-flex gap-2 mb-4">
-                            <button class="btn btn-custom-primary" id="generate-key">
-                                <i class="fas fa-key me-2"></i> Générer
-                            </button>
-                            <button class="btn btn-outline-secondary" id="key-clear">
-                                <i class="fas fa-times me-2"></i> Effacer
-                            </button>
-                        </div>
-                        <div id="key-result"></div>
-                    </div>
-                </div>
-
-                <!-- UUID Generator -->
-                <div class="card mb-3 border-0 shadow-sm d-none" id="uuid-generator">
-                    <div class="card-header bg-custom-primary text-white">
-                        <h5 class="mb-0"><i class="fas fa-dice me-2"></i> UUID Generator</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row g-3 mb-3">
-                            <div class="col-md-6">
-                                <label for="uuid-version" class="form-label fw-bold">Version UUID <span class="text-danger">*</span></label>
-                                <select class="form-select" id="uuid-version">
-                                    <option value="4">v4 — Aléatoire (RFC 4122)</option>
-                                    <option value="7">v7 — Temporel ordonné (RFC 9562)</option>
-                                    <option value="1">v1 — Temporel horodaté (RFC 4122)</option>
-                                    <option value="5">v5 — Basé sur un nom / SHA-1 (RFC 4122)</option>
-                                    <option value="3">v3 — Basé sur un nom / MD5 (RFC 4122)</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="uuid-count" class="form-label fw-bold">Quantité <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" id="uuid-count" min="1" max="100" value="1">
-                                <small class="text-muted">Entre 1 et 100</small>
-                            </div>
-                        </div>
-                        <!-- Namespace + nom (v3 / v5 uniquement) -->
-                        <div class="row g-3 mb-3" id="uuid-namespace-section" style="display:none;">
-                            <div class="col-md-6">
-                                <label for="uuid-namespace" class="form-label fw-bold">Namespace <span class="text-danger">*</span></label>
-                                <select class="form-select" id="uuid-namespace">
-                                    <option value="dns">DNS — 6ba7b810-9dad-11d1-80b4-00c04fd430c8</option>
-                                    <option value="url">URL — 6ba7b811-9dad-11d1-80b4-00c04fd430c8</option>
-                                    <option value="oid">OID — 6ba7b812-9dad-11d1-80b4-00c04fd430c8</option>
-                                    <option value="x500">X500 — 6ba7b814-9dad-11d1-80b4-00c04fd430c8</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="uuid-name" class="form-label fw-bold">Nom <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="uuid-name" placeholder="exemple.com">
-                            </div>
-                        </div>
-                        <div class="d-flex gap-2 mb-4">
-                            <button class="btn btn-custom-primary" id="uuid-generate">
-                                <i class="fas fa-dice me-2"></i> Générer
-                            </button>
-                            <button class="btn btn-outline-secondary" id="uuid-clear">
-                                <i class="fas fa-times me-2"></i> Effacer
-                            </button>
-                        </div>
-                        <!-- Résultat -->
-                        <div class="result-block" id="uuid-result-block" style="display:none;">
-                            <div class="d-flex justify-content-between align-items-center mb-1">
-                                <h6 class="mb-0 text-info"><i class="fas fa-list me-1"></i> Résultat</h6>
-                                <div class="btn-group btn-group-sm">
-                                    <button class="btn btn-outline-info" id="uuid-copy-all" title="Copier tout"><i class="fas fa-copy"></i></button>
-                                    <button class="btn btn-outline-info" id="uuid-download-all" title="Télécharger"><i class="fas fa-download"></i></button>
-                                </div>
-                            </div>
-                            <div id="uuid-list" class="bg-dark rounded p-3 mt-2" style="font-family:'Roboto Mono','SF Mono','Consolas',monospace;font-size:0.875rem;"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Hex (Base16) -->
-                <div class="card mb-3 border-0 shadow-sm d-none" id="hex-encoder">
-                    <div class="card-header bg-custom-primary text-white">
-                        <h5 class="mb-0"><i class="fas fa-hashtag me-2"></i> Hex (Base16)</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <textarea class="form-control" id="hex-input" rows="4" placeholder="Texte à encoder, ou valeur hexadécimale à décoder..."></textarea>
-                        </div>
-                        <div class="d-flex gap-2 mb-4">
-                            <button class="btn btn-custom-primary" id="encode-hex">
-                                <i class="fas fa-arrow-right me-2"></i> Encoder
-                            </button>
-                            <button class="btn btn-custom-primary" id="decode-hex">
-                                <i class="fas fa-arrow-left me-2"></i> Décoder
-                            </button>
-                            <button class="btn btn-outline-secondary" id="clear-hex">
-                                <i class="fas fa-times me-2"></i> Effacer
-                            </button>
-                        </div>
-                        <div id="hex-result-container" class="result-block" style="display:none;">
-                            <div class="d-flex justify-content-between align-items-center mb-1">
-                                <h6 class="mb-0 text-info"><i class="fas fa-hashtag me-1"></i> Résultat</h6>
-                                <div class="btn-group btn-group-sm">
-                                    <button type="button" class="btn btn-outline-info" id="copy-hex" title="Copier">
-                                        <i class="fas fa-copy"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-outline-info" id="download-hex" title="Télécharger">
-                                        <i class="fas fa-download"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <pre class="bg-dark text-info p-3 rounded text-break mt-2" id="hex-result" style="font-size:0.85rem;"></pre>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Base64 -->
-                <div class="card mb-3 border-0 shadow-sm d-none" id="base64">
-                    <div class="card-header bg-custom-primary text-white">
-                        <h5 class="mb-0"><i class="fas fa-exchange-alt me-2"></i> Base64</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <textarea class="form-control" id="base64-input" rows="4" placeholder="Texte à encoder/décoder..."></textarea>
-                        </div>
-                        <div class="d-flex gap-2 mb-4">
-                            <button class="btn btn-custom-primary" id="encode-base64">
-                                <i class="fas fa-lock me-2"></i> Encoder
-                            </button>
-                            <button class="btn btn-custom-primary" id="decode-base64">
-                                <i class="fas fa-unlock me-2"></i> Décoder
-                            </button>
-                            <button class="btn btn-outline-secondary" id="clear-base64">
-                                <i class="fas fa-times me-2"></i> Effacer
-                            </button>
-                        </div>
-                        <div id="base64-result-container" class="result-block" style="display:none;">
-                            <div class="d-flex justify-content-between align-items-center mb-1">
-                                <h6 class="mb-0 text-info"><i class="fas fa-exchange-alt me-1"></i> Résultat</h6>
-                                <div class="btn-group btn-group-sm">
-                                    <button type="button" class="btn btn-outline-info" id="copy-base64" title="Copier">
-                                        <i class="fas fa-copy"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-outline-info" id="download-base64" title="Télécharger">
-                                        <i class="fas fa-download"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <pre class="bg-dark text-info p-3 rounded text-break" id="base64-result" style="font-size:0.85rem;"></pre>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- JWT Decoder -->
-                <div class="card mb-3 border-0 shadow-sm d-none" id="jwt-decoder">
-                    <div class="card-header bg-custom-primary text-white">
-                        <h5 class="mb-0"><i class="fas fa-id-card me-2"></i> JWT Decoder</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label for="jwt-input" class="form-label">Token JWT :</label>
-                            <textarea class="form-control font-monospace" id="jwt-input" rows="4" placeholder="Collez votre JWT ici... (eyJ...)"></textarea>
-                        </div>
-                        <div class="d-flex gap-2 mb-3">
-                            <button class="btn btn-custom-primary" id="jwt-decode-btn">
-                                <i class="fas fa-unlock me-2"></i> Décoder
-                            </button>
-                            <button class="btn btn-outline-secondary" id="jwt-clear-btn">
-                                <i class="fas fa-times me-2"></i> Effacer
-                            </button>
-                        </div>
-                        <div id="jwt-result">
-                            <!-- Header -->
-                            <div class="result-block">
-                                <div class="d-flex justify-content-between align-items-center mb-1">
-                                    <h6 class="mb-0 text-primary"><i class="fas fa-heading me-1"></i> Header</h6>
-                                    <button class="btn btn-sm btn-outline-primary" id="jwt-copy-header" title="Copier"><i class="fas fa-copy"></i></button>
-                                </div>
-                                <pre class="bg-dark text-info p-3 rounded mb-0 mt-2" id="jwt-header-out">Décodez un JWT pour voir le header.</pre>
-                            </div>
-                            <!-- Payload -->
-                            <div class="result-block">
-                                <div class="d-flex justify-content-between align-items-center mb-1">
-                                    <h6 class="mb-0 text-success"><i class="fas fa-database me-1"></i> Payload</h6>
-                                    <button class="btn btn-sm btn-outline-success" id="jwt-copy-payload" title="Copier"><i class="fas fa-copy"></i></button>
-                                </div>
-                                <pre class="bg-dark text-success p-3 rounded mb-0 mt-2" id="jwt-payload-out">Décodez un JWT pour voir le payload.</pre>
-                            </div>
-                            <!-- Claims notables -->
-                            <div class="result-block" id="jwt-claims-section" style="display:none;">
-                                <h6 class="mb-2 text-warning"><i class="fas fa-info-circle me-1"></i> Claims</h6>
-                                <div id="jwt-claims" class="d-flex flex-wrap gap-2"></div>
-                            </div>
-                            <!-- Signature -->
-                            <div class="result-block">
-                                <h6 class="mb-1 text-danger"><i class="fas fa-signature me-1"></i> Signature</h6>
-                                <code class="text-danger text-break" id="jwt-signature-out">–</code>
-                                <div class="mt-1"><small class="text-muted">La vérification de signature nécessite la clé secrète/publique côté serveur.</small></div>
-                            </div>
-                        </div>
-                        <div id="jwt-error" class="alert alert-danger d-none"></div>
-                    </div>
-                </div>
-
-                <!-- Certificate Generator -->
-                <div class="card mb-3 border-0 shadow-sm d-none" id="cert-generator">
-                    <div class="card-header bg-custom-primary text-white">
-                        <h5 class="mb-0"><i class="fas fa-certificate me-2"></i> Certificate Generator</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row g-3">
-                            <!-- Algorithme -->
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Algorithme de signature <span class="text-danger">*</span></label>
-                                <select class="form-select" id="cert-algo">
-                                    <option value="rsa">SHA-256 avec RSA</option>
-                                    <option value="ecdsa">SHA-256 avec ECDSA</option>
-                                </select>
-                            </div>
-                            <!-- Taille de clé -->
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Taille de clé <span class="text-danger">*</span></label>
-                                <select class="form-select" id="cert-key-size">
-                                    <option value="2048">RSA 2048 bits (standard marché)</option>
-                                    <option value="4096">RSA 4096 bits</option>
-                                </select>
-                                <select class="form-select d-none" id="cert-ec-curve">
-                                    <option value="secp256r1">P-256 / 256 bits (standard marché)</option>
-                                    <option value="secp384r1">P-384 / 384 bits</option>
-                                    <option value="secp521r1">P-521 / 521 bits</option>
-                                </select>
-                            </div>
-                            <!-- CN -->
-                            <div class="col-md-6">
-                                <label for="cert-cn" class="form-label fw-bold">Common Name (CN) <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="cert-cn" placeholder="exemple.com">
-                            </div>
-                            <!-- Validité -->
-                            <div class="col-md-6" id="cert-validity-container">
-                                <label for="cert-validity" class="form-label fw-bold">Validité (autosigné uniquement)</label>
-                                <select class="form-select" id="cert-validity">
-                                    <option value="365">1 an</option>
-                                    <option value="730">2 ans</option>
-                                    <option value="3650">10 ans</option>
-                                </select>
-                            </div>
-                            <!-- O -->
-                            <div class="col-md-6">
-                                <label for="cert-o" class="form-label">Organization (O)</label>
-                                <input type="text" class="form-control" id="cert-o" placeholder="Mon Organisation">
-                            </div>
-                            <!-- OU -->
-                            <div class="col-md-6">
-                                <label for="cert-ou" class="form-label">Organizational Unit (OU)</label>
-                                <input type="text" class="form-control" id="cert-ou" placeholder="IT Department">
-                            </div>
-                            <!-- L -->
-                            <div class="col-md-6">
-                                <label for="cert-l" class="form-label">Locality (L)</label>
-                                <input type="text" class="form-control" id="cert-l" placeholder="Paris">
-                            </div>
-                            <!-- ST -->
-                            <div class="col-md-6">
-                                <label for="cert-st" class="form-label">State or Province (ST)</label>
-                                <input type="text" class="form-control" id="cert-st" placeholder="Île-de-France">
-                            </div>
-                            <!-- C -->
-                            <div class="col-md-6">
-                                <label for="cert-c" class="form-label">Country (C)</label>
-                                <input type="text" class="form-control" id="cert-c" placeholder="FR" maxlength="2" style="max-width:120px;">
-                                <small class="text-muted">2 lettres (ISO 3166)</small>
-                            </div>
-                            <!-- SAN -->
-                            <div class="col-12">
-                                <label class="form-label fw-bold">Subject Alternative Names (SAN) <span class="text-danger">*</span></label>
-                                <div id="cert-san-list"></div>
-                                <button type="button" class="btn btn-sm btn-outline-secondary mt-2" id="cert-add-san">
-                                    <i class="fas fa-plus me-1"></i> Ajouter un SAN
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Actions -->
-                        <div class="d-flex flex-wrap gap-2 mt-4">
-                            <button class="btn btn-custom-primary" id="cert-gen-selfsigned">
-                                <i class="fas fa-certificate me-2"></i> Générer un autosigné
-                            </button>
-                            <button class="btn btn-outline-primary" id="cert-gen-csr">
-                                <i class="fas fa-file-alt me-2"></i> Générer un CSR
-                            </button>
-                            <button class="btn btn-outline-secondary" id="cert-clear">
-                                <i class="fas fa-times me-2"></i> Effacer
-                            </button>
-                        </div>
-
-                        <!-- Loading -->
-                        <div id="cert-loading" class="d-none mt-3">
-                            <div class="d-flex align-items-center gap-2">
-                                <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
-                                <span id="cert-loading-msg">Génération en cours…</span>
-                            </div>
-                        </div>
-
-                        <!-- Erreur -->
-                        <div id="cert-error" class="alert alert-danger mt-3 d-none"></div>
-
-                        <!-- Résultat -->
-                        <div id="cert-result" class="mt-4">
-                            <!-- Clé privée -->
-                            <div class="result-block">
-                                <div class="d-flex justify-content-between align-items-center mb-1">
-                                    <h6 class="mb-0"><i class="fas fa-key me-1 text-warning"></i> Clé Privée (PKCS#8)</h6>
-                                    <div class="btn-group btn-group-sm">
-                                        <button class="btn btn-outline-warning" id="cert-copy-privkey" title="Copier"><i class="fas fa-copy"></i></button>
-                                        <button class="btn btn-outline-warning" id="cert-dl-privkey" title="Télécharger"><i class="fas fa-download"></i></button>
-                                    </div>
-                                </div>
-                                <pre class="bg-dark text-warning p-3 rounded text-break mt-2" id="cert-privkey-out" style="max-height:200px;overflow-y:auto;font-size:0.75rem;">Générez un certificat ou un CSR pour voir la clé privée.</pre>
-                            </div>
-                            <!-- Certificat / CSR -->
-                            <div class="result-block">
-                                <div class="d-flex justify-content-between align-items-center mb-1">
-                                    <h6 class="mb-0" id="cert-output-label"><i class="fas fa-certificate me-1 text-success"></i> Certificat</h6>
-                                    <div class="btn-group btn-group-sm">
-                                        <button class="btn btn-outline-success" id="cert-copy-cert" title="Copier"><i class="fas fa-copy"></i></button>
-                                        <button class="btn btn-outline-success" id="cert-dl-cert" title="Télécharger"><i class="fas fa-download"></i></button>
-                                    </div>
-                                </div>
-                                <pre class="bg-dark text-success p-3 rounded text-break mt-2" id="cert-cert-out" style="max-height:200px;overflow-y:auto;font-size:0.75rem;">Générez un certificat ou un CSR pour voir le résultat.</pre>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Color Picker -->
-                <div class="card mb-3 border-0 shadow-sm d-none" id="color-picker">
-                    <div class="card-header bg-custom-primary text-white">
-                        <h5 class="mb-0"><i class="fas fa-palette me-2"></i> Color Picker</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <input type="color" class="form-control form-control-color" id="color-input" value="#3498db">
-                        </div>
-                        <div class="alert alert-custom-secondary" id="color-result">
-                            <p>HEX: <span id="hex-value">#3498db</span></p>
-                            <p>RGB: <span id="rgb-value">rgb(52, 152, 219)</span></p>
-                            <p>HSL: <span id="hsl-value">hsl(204, 69%, 53%)</span></p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Date-Time Converter -->
-                <div class="card mb-3 border-0 shadow-sm d-none" id="datetime-converter">
-                    <div class="card-header bg-custom-primary text-white">
-                        <h5 class="mb-0"><i class="fas fa-clock me-2"></i> Date-Time Converter</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label for="datetime-input" class="form-label">Date/Heure :</label>
-                            <input type="datetime-local" class="form-control" id="datetime-input">
-                        </div>
-                        <div class="mb-3">
-                            <label for="timezone" class="form-label">Fuseau horaire :</label>
-                            <select class="form-select" id="timezone">
-                                <option value="local">Local</option>
-                                <option value="utc">UTC</option>
-                                <option value="america/new_york">New York</option>
-                                <option value="europe/paris">Paris</option>
-                                <option value="asia/tokyo">Tokyo</option>
-                            </select>
-                        </div>
-                        <button class="btn btn-custom-primary mb-3" id="convert-datetime">Convertir</button>
-                        <div class="alert alert-custom-secondary" id="datetime-result"></div>
-                    </div>
-                </div>
-
-                <!-- Device Info -->
-                <div class="card mb-3 border-0 shadow-sm d-none" id="device-info">
-                    <div class="card-header bg-custom-primary text-white">
-                        <h5 class="mb-0"><i class="fas fa-mobile-alt me-2"></i> Device / Browser Info</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="alert alert-custom-secondary" id="device-result"></div>
-                    </div>
-                </div>
-
-                <!-- HTTP Codes -->
-                <div class="card mb-3 border-0 shadow-sm d-none" id="http-codes">
-                    <div class="card-header bg-custom-primary text-white">
-                        <h5 class="mb-0"><i class="fas fa-list-ol me-2"></i> Liste des codes HTTP</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Code</th>
-                                        <th>Nom</th>
-                                        <th>Description</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr><td>100</td><td>Continue</td><td>Le serveur a reçu les en-têtes de la requête et le client doit continuer à envoyer le corps de la requête.</td></tr>
-                                    <tr><td>101</td><td>Switching Protocols</td><td>Le serveur accepte de changer de protocole (par exemple, de HTTP à WebSocket).</td></tr>
-                                    <tr><td>200</td><td>OK</td><td>La requête a réussi.</td></tr>
-                                    <tr><td>201</td><td>Created</td><td>La requête a réussi et une nouvelle ressource a été créée.</td></tr>
-                                    <tr><td>204</td><td>No Content</td><td>La requête a réussi mais il n'y a pas de contenu à renvoyer.</td></tr>
-                                    <tr><td>301</td><td>Moved Permanently</td><td>La ressource demandée a été définitivement déplacée vers une nouvelle URL.</td></tr>
-                                    <tr><td>302</td><td>Found</td><td>La ressource demandée a été temporairement déplacée vers une nouvelle URL.</td></tr>
-                                    <tr><td>400</td><td>Bad Request</td><td>La requête est malformée.</td></tr>
-                                    <tr><td>401</td><td>Unauthorized</td><td>La requête nécessite une authentification.</td></tr>
-                                    <tr><td>403</td><td>Forbidden</td><td>Le serveur a compris la requête mais refuse de l'exécuter.</td></tr>
-                                    <tr><td>404</td><td>Not Found</td><td>La ressource demandée n'existe pas.</td></tr>
-                                    <tr><td>500</td><td>Internal Server Error</td><td>Le serveur a rencontré une erreur inattendue.</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Subnet Calculator -->
-                <div class="card mb-3 border-0 shadow-sm d-none" id="subnet-calculator">
-                    <div class="card-header bg-custom-primary text-white">
-                        <h5 class="mb-0"><i class="fas fa-network-wired me-2"></i> IPv4 Subnet Calculator</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label for="ip-address" class="form-label">Adresse IP :</label>
-                            <input type="text" class="form-control" id="ip-address" placeholder="192.168.1.0">
-                        </div>
-                        <div class="mb-3">
-                            <label for="subnet-mask" class="form-label">Masque de sous-réseau :</label>
-                            <input type="text" class="form-control" id="subnet-mask" placeholder="255.255.255.0 ou /24">
-                        </div>
-                        <button class="btn btn-custom-primary mb-3" id="calculate-subnet">Calculer</button>
-                        <div class="alert alert-custom-secondary" id="subnet-result"></div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 
     <!-- Bootstrap 5.3 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Crypto & Hash libraries -->
+    <!-- Crypto & Hash libraries (globals used by modules) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bcryptjs/2.4.3/bcrypt.min.js"></script>
-    <!-- SHA-1 library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha1/0.6.0/sha1.min.js"></script>
-    <!-- JsEncrypt for RSA -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsencrypt/3.3.2/jsencrypt.min.js"></script>
-    <!-- TweetNaCl for Ed25519 -->
     <script src="https://cdn.jsdelivr.net/npm/tweetnacl@1.0.3/nacl.min.js"></script>
-    <!-- Elliptic for ECDSA -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/elliptic/6.6.1/elliptic.min.js"></script>
-    <!-- Base64 encoding for SSH -->
     <script src="https://cdn.jsdelivr.net/npm/js-base64@3.7.5/base64.min.js"></script>
-    <!-- jsrsasign for X.509 / CSR generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsrsasign/10.5.27/jsrsasign-all-min.js"></script>
-    <script src="the-deck.js"></script>
+    <!-- App (ES Module) -->
+    <script type="module" src="the-deck.js"></script>
 </body>
 </html>

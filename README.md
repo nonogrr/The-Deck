@@ -8,59 +8,49 @@ Une collection d'outils web pratiques et conviviaux pour les développeurs et le
 - **Token Generator** - Générer des tokens aléatoires sécurisés avec calcul de l'entropie
 - **Hash / HMAC** - Hasher du texte avec différents algorithmes
 - **Bcrypt** - Générer et vérifier des mots de passe bcrypt
-- **Key Generator** - Créer des clés cryptographiques
-- **Certificat Generator** - Génération d'un certificat auto-signé ou d'un CSR
+- **SSH Key Generator** - Créer des clés cryptographiques SSH
+- **Certificat** - Génération d'un certificat auto-signé ou d'un CSR / Explorateur de Certificat TLS
 - **UUIDs Generator** - Générez des UUIDs v1, v3, v4, v5, v7
 - **Base64** - Encoder et décoder en Base64
 - **Hex (Base 16)** - Encoder et décoder en Hex (Base 16) : à venir
-- **JWT Decoder** - Décodage d'un JWT (JSON Web Token)
+- **JWT** - Encodage et décodage d'un JWT (JSON Web Token)
+
+### Utilitaires
+- **Diff tool** — comparer deux chaînes ou deux blocs 
 
 ### Design
 - **Color Picker** - Sélectionner et convertir des couleurs
 
+## 🚀 RoadMap
 
 🛡️ Cryptographie & Secret (Le cœur du Deck)
 
 Encodage / Décodage
+- URL Encode/Decode — très courant en debug d'APIs REST
+- HTML Entities Encode/Decode — utile pour le dev frontend / XSS analysis
+- Binary / Octal converter — compléter Base16/Base64 avec les autres bases
+- Hashing / Passwords
+- Argon2 — successeur moderne de Bcrypt (recommandé par OWASP)
+- PBKDF2 — standard pour la dérivation de clés (Web Crypto API natif)
+- Hash compare — vérifier si un texte correspond à un hash bcrypt/argon2 existant
+- Asymétrique / PKI
+- TOTP Generator — générer des codes OTP (Google Authenticator compatible, RFC 6238)
+- AES Encrypt/Decrypt — chiffrement symétrique AES-GCM ou AES-CBC avec clé et IV
+- HMAC standalone — actuellement intégré dans Hash/HMAC, mais un outil dédié avec choix d'algo et format de sortie 
+- OAuth2 / PKCE helper — générer code_verifier + code_challenge (utile pour les devs qui intègrent des flows OAuth)
 
-URL Encode/Decode — très courant en debug d'APIs REST
-HTML Entities Encode/Decode — utile pour le dev frontend / XSS analysis
-Binary / Octal converter — compléter Base16/Base64 avec les autres bases
-Hashing / Passwords
-
-Argon2 — successeur moderne de Bcrypt (recommandé par OWASP)
-PBKDF2 — standard pour la dérivation de clés (Web Crypto API natif)
-Hash compare — vérifier si un texte correspond à un hash bcrypt/argon2 existant
-Asymétrique / PKI
-
-PEM Inspector — parser et afficher le contenu d'un PEM (certificat, clé) : subject, issuer, dates, SANs, fingerprint
-SSH Key Generator — générer une paire ED25519/RSA au format OpenSSH (ssh-keygen en JS)
-TOTP Generator — générer des codes OTP (Google Authenticator compatible, RFC 6238)
-Symétrique
-
-AES Encrypt/Decrypt — chiffrement symétrique AES-GCM ou AES-CBC avec clé et IV
-HMAC standalone — actuellement intégré dans Hash/HMAC, mais un outil dédié avec choix d'algo et format de sortie serait plus lisible
-Tokens / Auth
-
-JWT Builder — en complément du JWT Decoder existant, construire et signer un JWT (HS256/RS256)
-OAuth2 / PKCE helper — générer code_verifier + code_challenge (utile pour les devs qui intègrent des flows OAuth)
 Utilitaires
+  - Diff tool — comparer deux chaînes ou deux blocs PEM/JSON
+  - Regex tester — tester des regex avec highlight des groupes
+  - CRC32 / Adler32 — checksums courants en protocoles réseau/embarqué
+  
 
-Diff tool — comparer deux chaînes ou deux blocs PEM/JSON
-Regex tester — tester des regex avec highlight des groupes
-CRC32 / Adler32 — checksums courants en protocoles réseau/embarqué
-Priorité suggérée si tu veux avancer par valeur ajoutée :
-
-TOTP Generator — très demandé, 100% client-side avec WebCrypto
-AES Encrypt/Decrypt — manque flagrant dans un toolbox crypto
-URL Encode/Decode — usage quotidien
-PEM Inspector — complète naturellement le Certificate Generator existant
-JWT Builder — complète le JWT Decoder
-
+SysOps
+  -  Générateur de Config SSH : Un petit formulaire pour générer un bloc de texte propre pour le fichier ~/.ssh/config.
+  - Validateur de Cron : Un champ pour tester une expression Cron et voir les prochaines exécutions (très utile pour les pipelines).
+  - PS1 BASH générator avec des templates
 
 🌐 Réseau & Infrastructure (Le côté Ops)
-
-    Explorateur de Certificat TLS : Permet de coller un certificat PEM pour extraire les dates d'expiration, l'émetteur et les SAN (Subject Alternative Names).
 
     Générateur de Config SSH : Un petit formulaire pour générer un bloc de texte propre pour le fichier ~/.ssh/config.
 
@@ -108,7 +98,7 @@ The-Deck/
 - **CSS3** - Styling
 - **JavaScript** - Interactivité
 - **Bootstrap 5.3** - Framework CSS
-- **Font Awesome 6.4** - Icônes
+- **Font Awesome 7.2** - Icônes
 - **Google Fonts** - Typos (Roboto Mono)
 
 ## ⚙️ Fonctionnalités principales
@@ -126,7 +116,7 @@ The-Deck/
 
 1. Utilisez la barre latérale pour naviguer entre les différents outils
 2. Cliquez sur un outil pour accéder à sa fonctionnalité
-3. Utilisez le bouton thème (🌙/☀️) pour changer le mode d'affichage
+3. Utilisez le bouton thème  pour changer le mode d'affichage
 4. Utilisez la barre de recherche pour trouver rapidement un outil
 
 ## 📄 Licence
